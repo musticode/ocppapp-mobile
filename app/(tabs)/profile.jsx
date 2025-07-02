@@ -1,11 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Profile() {
+  const navigation = useNavigation();
+
   const [creditCard, setCreditCard] = useState({
     number: "**** **** **** 1234",
     type: "Visa",
@@ -44,6 +54,14 @@ export default function Profile() {
       //   headerImage={<Image source={userProfile.avatar} style={styles.avatar} />}
       headerBackgroundColor={{ light: "#F8F9FB", dark: "#121212" }}
     >
+      <View style={styles.container}>
+        <Text>Profile</Text>
+        <Button
+          title="Go to Home"
+          onPress={() => navigation.navigate("login")}
+        />
+      </View>
+
       {/* Header Bar */}
       <View style={styles.headerBar}>
         <TouchableOpacity style={styles.headerIcon}>
