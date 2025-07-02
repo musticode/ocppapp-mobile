@@ -1,14 +1,6 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  Dimensions,
-  TouchableOpacity,
-  Button,
-} from "react-native";
-import { Camera, CameraType, BarcodeScanningResult } from "expo-camera";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Button } from "react-native";
+import { CameraType } from "expo-camera";
 
 import { CameraView, useCameraPermissions } from "expo-camera";
 
