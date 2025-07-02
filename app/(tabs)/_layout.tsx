@@ -8,6 +8,7 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -33,7 +34,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <Icon name="home" size={24} color="black" />
           ),
         }}
       />
@@ -43,7 +44,7 @@ export default function TabLayout() {
         options={{
           title: "Transactions",
           tabBarIcon: ({ color }) => (
-            <AntDesign name="creditcard" size={24} color="black" />
+            <Icon name="credit-card" size={24} color="black" />
           ),
         }}
       />
@@ -53,7 +54,7 @@ export default function TabLayout() {
         options={{
           title: "QR Scanner",
           tabBarIcon: ({ color }) => (
-            <AntDesign name="qrcode" size={24} color="black" />
+            <Icon name="ev-station" size={24} color="black" />
           ),
         }}
       />
@@ -63,7 +64,7 @@ export default function TabLayout() {
         options={{
           title: "Vehicle",
           tabBarIcon: ({ color }) => (
-            <AntDesign name="car" size={24} color="black" />
+            <Icon name="car-electric" size={24} color="black" />
           ),
         }}
       />
@@ -73,7 +74,7 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => (
-            <AntDesign name="user" size={24} color="black" />
+            <Icon name="account" size={24} color="black" />
           ),
         }}
       />
