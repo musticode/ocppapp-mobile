@@ -7,10 +7,21 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function LoginPage() {
+  const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const onLogginButtonPress = () => {
+    console.log("Login button pressed");
+  };
+
+  const onRegisterButtonPress = () => {
+    console.log("Register button pressed");
+    navigation.navigate("register");
+  };
 
   return (
     <View style={styles.container}>
@@ -29,7 +40,10 @@ export default function LoginPage() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity
+        style={styles.loginButton}
+        onPress={onLogginButtonPress}
+      >
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
       <Text style={styles.orText}>or</Text>
@@ -41,6 +55,12 @@ export default function LoginPage() {
           style={styles.googleIcon}
         />
         <Text style={styles.googleButtonText}>Sign in with Google</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.registerButton}
+        onPress={onRegisterButtonPress}
+      >
+        <Text style={styles.registerButtonText}>Register</Text>
       </TouchableOpacity>
     </View>
   );
@@ -59,6 +79,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 32,
     color: "#222",
+  },
+  registerButton: {
+    width: "100%",
+    maxWidth: 320,
+    height: 48,
+    backgroundColor: "#0a7ea4",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+    marginTop: 16,
+    borderColor: "#ccc",
+  },
+  registerButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
   input: {
     width: "100%",
