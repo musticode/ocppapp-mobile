@@ -8,11 +8,21 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginPage() {
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // todo : store login data in async storage
+  const storeLoginData = async (value) => {
+    try {
+      await AsyncStorage.setItem("loginData", value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const onLogginButtonPress = () => {
     console.log("Login button pressed");
