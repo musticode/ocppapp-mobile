@@ -8,11 +8,22 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AppHeader } from "./AppHeader";
 
 export default function LoginPage() {
   const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // todo : store login data in async storage
+  const storeLoginData = async (value) => {
+    try {
+      await AsyncStorage.setItem("loginData", value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const onLogginButtonPress = () => {
     console.log("Login button pressed");
@@ -25,43 +36,50 @@ export default function LoginPage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        autoCapitalize="none"
+      <AppHeader
+        title="Sign In"
+        showBackButton={true}
+        subtitle="Welcome back"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TouchableOpacity
-        style={styles.loginButton}
-        onPress={onLogginButtonPress}
-      >
-        <Text style={styles.loginButtonText}>Login</Text>
-      </TouchableOpacity>
-      <Text style={styles.orText}>or</Text>
-      <TouchableOpacity style={styles.googleButton}>
-        <Image
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png",
-          }}
-          style={styles.googleIcon}
+      <View style={styles.content}>
+        <Text style={styles.title}>Sign In</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
         />
-        <Text style={styles.googleButtonText}>Sign in with Google</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.registerButton}
-        onPress={onRegisterButtonPress}
-      >
-        <Text style={styles.registerButtonText}>Register</Text>
-      </TouchableOpacity>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={onLogginButtonPress}
+        >
+          <Text style={styles.loginButtonText}>Login</Text>
+        </TouchableOpacity>
+        <Text style={styles.orText}>or</Text>
+        <TouchableOpacity style={styles.googleButton}>
+          <Image
+            source={{
+              uri: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png",
+            }}
+            style={styles.googleIcon}
+          />
+          <Text style={styles.googleButtonText}>Sign in with Google</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.registerButton}
+          onPress={onRegisterButtonPress}
+        >
+          <Text style={styles.registerButtonText}>Register</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -69,9 +87,12 @@ export default function LoginPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+  },
+  content: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
     padding: 24,
   },
   title: {

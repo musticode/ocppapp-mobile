@@ -7,14 +7,20 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+import { AppHeader } from "@/components/AppHeader";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { useNavigation } from "@react-navigation/native";
+import Notifications from "@/components/Notifications";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function Profile() {
   const navigation = useNavigation();
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme] ?? Colors.light;
 
   const [creditCard, setCreditCard] = useState({
     number: "**** **** **** 1234",
@@ -50,165 +56,260 @@ export default function Profile() {
   });
 
   return (
-    <ParallaxScrollView
-      //   headerImage={<Image source={userProfile.avatar} style={styles.avatar} />}
-      headerBackgroundColor={{ light: "#F8F9FB", dark: "#121212" }}
+    <View style={styles.container}>
+      <ParallaxScrollView
+        headerBackgroundColor={{ light: "#F8F9FB", dark: "#121212" }}
+      >
+        {/* Profile Header */}
+        <View style={styles.profileHeader}>
+          <Image source={userProfile.avatar} style={styles.avatar} />
+          <View style={styles.headerTextContainer}>
+            <ThemedText type="title" style={styles.fullName}>
+              {userProfile.firstName} {userProfile.lastName}
+            </ThemedText>
+            <ThemedText style={styles.username}>
+              {userProfile.username}
+            </ThemedText>
+          </View>
+        </View>
+
+        {/* Profile Summary Stats */}
+        <View style={styles.summaryContainer}>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryValue}>
+              {userProfile.creditCard.type}
+            </Text>
+            <Text style={styles.summaryLabel}>Card Type</Text>
+          </View>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryValue}>3</Text>
+            <Text style={styles.summaryLabel}>Social Accounts</Text>
+          </View>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryValue}>Active</Text>
+            <Text style={styles.summaryLabel}>Status</Text>
+          </View>
+        </View>
+
+        {/* Personal Information Card */}
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: colors.background,
+              borderColor: colors.icon + "20",
+            },
+          ]}
+        >
+          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
+            PERSONAL INFORMATION
+          </ThemedText>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>Username</Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.username}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>Name</Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.firstName} {userProfile.lastName}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>Phone</Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.phone}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>Birthday</Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.birthday}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>Country</Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.country}
+            </Text>
+          </View>
+        </View>
+
+        {/* Credit Card Information Card */}
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: colors.background,
+              borderColor: colors.icon + "20",
+            },
+          ]}
+        >
+          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
+            CREDIT CARD INFORMATION
+          </ThemedText>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>
+              Card Number
+            </Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.creditCard.number}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>
+              Card Type
+            </Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.creditCard.type}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>
+              Expiry Date
+            </Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.creditCard.expiryDate}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>
+              Cardholder Name
+            </Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.creditCard.cardholderName}
+            </Text>
+          </View>
+        </View>
+
+        {/* Login Information Card */}
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: colors.background,
+              borderColor: colors.icon + "20",
+            },
+          ]}
+        >
+          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
+            LOGIN INFORMATION
+          </ThemedText>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>Email</Text>
+            <Text style={[styles.value, { color: colors.text }]}>
+              {userProfile.email}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={[styles.label, { color: colors.icon }]}>
+              Update password
+            </Text>
+            <IconSymbol name="chevron.right" size={18} color={colors.icon} />
+          </View>
+        </View>
+
+        {/* <SocialAccounts social={userProfile.social} /> */}
+      </ParallaxScrollView>
+    </View>
+  );
+}
+
+function PersonalInformation() {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme] ?? Colors.light;
+
+  return (
+    <View>
+      <Text>Personal Information</Text>
+    </View>
+  );
+}
+
+function SocialAccounts(props) {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme] ?? Colors.light;
+
+  return (
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: colors.background,
+          borderColor: colors.icon + "20",
+        },
+      ]}
     >
-      <View style={styles.container}>
-        <Text>Profile</Text>
-        <Button
-          title="Go to Home"
-          onPress={() => navigation.navigate("login")}
+      <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
+        SOCIAL ACCOUNTS
+      </ThemedText>
+      <View style={styles.infoRow}>
+        <IconSymbol
+          name="applelogo"
+          size={20}
+          color="#000"
+          style={styles.socialIcon}
         />
-      </View>
-
-      {/* Header Bar */}
-      <View style={styles.headerBar}>
-        <TouchableOpacity style={styles.headerIcon}>
-          <IconSymbol name="chevron.left" size={26} color="#222" />
-        </TouchableOpacity>
-        <ThemedText type="title" style={styles.headerTitle}>
-          Account
-        </ThemedText>
-        <TouchableOpacity style={styles.headerIcon}>
-          <IconSymbol name="ellipsis" size={24} color="#222" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Profile Header */}
-      <View style={styles.profileHeader}>
-        <Image source={userProfile.avatar} style={styles.avatar} />
-        <View style={styles.headerTextContainer}>
-          <ThemedText type="title" style={styles.fullName}>
-            {userProfile.firstName} {userProfile.lastName}
-          </ThemedText>
-          <ThemedText style={styles.username}>
-            {userProfile.username}
-          </ThemedText>
-        </View>
-      </View>
-
-      {/* Personal Information Card */}
-      <View style={styles.card}>
-        <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-          PERSONAL INFORMATION
-        </ThemedText>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Username</Text>
-          <Text style={styles.value}>{userProfile.username}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Name</Text>
-          <Text style={styles.value}>
-            {userProfile.firstName} {userProfile.lastName}
-          </Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Phone</Text>
-          <Text style={styles.value}>{userProfile.phone}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Birthday</Text>
-          <Text style={styles.value}>{userProfile.birthday}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Country</Text>
-          <Text style={styles.value}>{userProfile.country}</Text>
-        </View>
-      </View>
-
-      {/* Credit Card Information Card */}
-      <View style={styles.card}>
-        <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-          CREDIT CARD INFORMATION
-        </ThemedText>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Card Number</Text>
-          <Text style={styles.value}>{userProfile.creditCard.number}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Card Type</Text>
-          <Text style={styles.value}>{userProfile.creditCard.type}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Expiry Date</Text>
-          <Text style={styles.value}>{userProfile.creditCard.expiryDate}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Cardholder Name</Text>
-          <Text style={styles.value}>
-            {userProfile.creditCard.cardholderName}
-          </Text>
-        </View>
-      </View>
-
-      {/* Login Information Card */}
-      <View style={styles.card}>
-        <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-          LOGIN INFORMATION
-        </ThemedText>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.value}>{userProfile.email}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Update password</Text>
-          <IconSymbol name="chevron.right" size={18} color="#888" />
-        </View>
-      </View>
-
-      {/* Social Accounts Card */}
-      <View style={styles.card}>
-        <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-          SOCIAL ACCOUNTS
-        </ThemedText>
-        <View style={styles.infoRow}>
-          <IconSymbol
-            name="applelogo"
-            size={20}
-            color="#000"
-            style={styles.socialIcon}
-          />
-          <Text style={styles.socialLabel}>Apple</Text>
+        <Text style={[styles.socialLabel, { color: colors.text }]}>Apple</Text>
+        {props.social.apple === "connected" ? (
           <Text style={[styles.socialStatus, styles.connected]}>Connected</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <IconSymbol
-            name="gamecontroller"
-            size={20}
-            color="#5865F2"
-            style={styles.socialIcon}
-          />
-          <Text style={styles.socialLabel}>Discord</Text>
-          <Text style={[styles.socialStatus, styles.connected]}>Connected</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <IconSymbol
-            name="logo.facebook"
-            size={20}
-            color="#1877F3"
-            style={styles.socialIcon}
-          />
-          <Text style={styles.socialLabel}>Facebook</Text>
+        ) : (
           <Text style={[styles.socialStatus, styles.needsVerification]}>
             Needs Verification
           </Text>
-        </View>
+        )}
       </View>
-    </ParallaxScrollView>
+      <View style={styles.infoRow}>
+        <IconSymbol
+          name="gamecontroller"
+          size={20}
+          color="#5865F2"
+          style={styles.socialIcon}
+        />
+        <Text style={[styles.socialLabel, { color: colors.text }]}>
+          Discord
+        </Text>
+        {props.social.discord === "connected" ? (
+          <Text style={[styles.socialStatus, styles.connected]}>Connected</Text>
+        ) : (
+          <Text style={[styles.socialStatus, styles.needsVerification]}>
+            Needs Verification
+          </Text>
+        )}
+      </View>
+      <View style={styles.infoRow}>
+        <IconSymbol
+          name="logo.facebook"
+          size={20}
+          color="#1877F3"
+          style={styles.socialIcon}
+        />
+        <Text style={[styles.socialLabel, { color: colors.text }]}>
+          Facebook
+        </Text>
+        {props.social.facebook === "connected" ? (
+          <Text style={[styles.socialStatus, styles.connected]}>Connected</Text>
+        ) : (
+          <Text style={[styles.socialStatus, styles.needsVerification]}>
+            Needs Verification
+          </Text>
+        )}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#F8F9FB",
+    backgroundColor: "#f8f9fa",
   },
   profileHeader: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 24,
+    paddingHorizontal: 10,
   },
   avatar: {
     width: 72,
@@ -229,16 +330,43 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#888",
   },
+  summaryContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: "#f8f9fa",
+    marginHorizontal: 10,
+    borderRadius: 12,
+    marginBottom: 15,
+  },
+  summaryItem: {
+    alignItems: "center",
+  },
+  summaryValue: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#0a7ea4",
+  },
+  summaryLabel: {
+    fontSize: 12,
+    color: "#666",
+    marginTop: 2,
+  },
   card: {
-    backgroundColor: "#FFF",
-    borderRadius: 14,
-    padding: 16,
+    marginHorizontal: 10,
     marginBottom: 18,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
     shadowColor: "#000",
-    shadowOpacity: 0.04,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
     shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    elevation: 3,
   },
   cardTitle: {
     fontSize: 13,
@@ -256,14 +384,13 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: "#444",
     flex: 1,
   },
   value: {
     fontSize: 16,
-    color: "#222",
     flex: 2,
     textAlign: "right",
+    fontWeight: "500",
   },
   socialIcon: {
     marginRight: 10,
@@ -271,7 +398,6 @@ const styles = StyleSheet.create({
   socialLabel: {
     flex: 1,
     fontSize: 16,
-    color: "#444",
   },
   socialStatus: {
     fontSize: 15,
