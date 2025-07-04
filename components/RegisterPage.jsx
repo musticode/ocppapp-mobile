@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { AppHeader } from "./AppHeader";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -109,131 +110,145 @@ export default function RegisterPage() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
+    <View style={styles.container}>
+      <AppHeader
+        title="Create Account"
+        showBackButton={true}
+        subtitle="Join EV Charging"
+      />
+      <KeyboardAvoidingView
+        style={styles.keyboardContainer}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <Text style={styles.title}>Create Account</Text>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.title}>Create Account</Text>
 
-        <View style={styles.nameRow}>
-          <View style={styles.nameInputContainer}>
+          <View style={styles.nameRow}>
+            <View style={styles.nameInputContainer}>
+              <TextInput
+                style={[
+                  styles.input,
+                  styles.halfInput,
+                  errors.firstName && styles.inputError,
+                ]}
+                placeholder="First Name"
+                value={formData.firstName}
+                onChangeText={(value) => updateFormData("firstName", value)}
+                autoCapitalize="words"
+              />
+              {errors.firstName && (
+                <Text style={styles.errorText}>{errors.firstName}</Text>
+              )}
+            </View>
+
+            <View style={styles.nameInputContainer}>
+              <TextInput
+                style={[
+                  styles.input,
+                  styles.halfInput,
+                  errors.lastName && styles.inputError,
+                ]}
+                placeholder="Last Name"
+                value={formData.lastName}
+                onChangeText={(value) => updateFormData("lastName", value)}
+                autoCapitalize="words"
+              />
+              {errors.lastName && (
+                <Text style={styles.errorText}>{errors.lastName}</Text>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.inputContainer}>
             <TextInput
-              style={[
-                styles.input,
-                styles.halfInput,
-                errors.firstName && styles.inputError,
-              ]}
-              placeholder="First Name"
-              value={formData.firstName}
-              onChangeText={(value) => updateFormData("firstName", value)}
-              autoCapitalize="words"
+              style={[styles.input, errors.email && styles.inputError]}
+              placeholder="Email Address"
+              value={formData.email}
+              onChangeText={(value) => updateFormData("email", value)}
+              keyboardType="email-address"
+              autoCapitalize="none"
             />
-            {errors.firstName && (
-              <Text style={styles.errorText}>{errors.firstName}</Text>
+            {errors.email && (
+              <Text style={styles.errorText}>{errors.email}</Text>
             )}
           </View>
 
-          <View style={styles.nameInputContainer}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={[styles.input, errors.phone && styles.inputError]}
+              placeholder="Phone Number"
+              value={formData.phone}
+              onChangeText={(value) => updateFormData("phone", value)}
+              keyboardType="phone-pad"
+            />
+            {errors.phone && (
+              <Text style={styles.errorText}>{errors.phone}</Text>
+            )}
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={[styles.input, errors.password && styles.inputError]}
+              placeholder="Password"
+              value={formData.password}
+              onChangeText={(value) => updateFormData("password", value)}
+              secureTextEntry
+            />
+            {errors.password && (
+              <Text style={styles.errorText}>{errors.password}</Text>
+            )}
+          </View>
+
+          <View style={styles.inputContainer}>
             <TextInput
               style={[
                 styles.input,
-                styles.halfInput,
-                errors.lastName && styles.inputError,
+                errors.confirmPassword && styles.inputError,
               ]}
-              placeholder="Last Name"
-              value={formData.lastName}
-              onChangeText={(value) => updateFormData("lastName", value)}
-              autoCapitalize="words"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChangeText={(value) => updateFormData("confirmPassword", value)}
+              secureTextEntry
             />
-            {errors.lastName && (
-              <Text style={styles.errorText}>{errors.lastName}</Text>
+            {errors.confirmPassword && (
+              <Text style={styles.errorText}>{errors.confirmPassword}</Text>
             )}
           </View>
-        </View>
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={[styles.input, errors.email && styles.inputError]}
-            placeholder="Email Address"
-            value={formData.email}
-            onChangeText={(value) => updateFormData("email", value)}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-        </View>
-
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={[styles.input, errors.phone && styles.inputError]}
-            placeholder="Phone Number"
-            value={formData.phone}
-            onChangeText={(value) => updateFormData("phone", value)}
-            keyboardType="phone-pad"
-          />
-          {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
-        </View>
-
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={[styles.input, errors.password && styles.inputError]}
-            placeholder="Password"
-            value={formData.password}
-            onChangeText={(value) => updateFormData("password", value)}
-            secureTextEntry
-          />
-          {errors.password && (
-            <Text style={styles.errorText}>{errors.password}</Text>
-          )}
-        </View>
-
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={[styles.input, errors.confirmPassword && styles.inputError]}
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChangeText={(value) => updateFormData("confirmPassword", value)}
-            secureTextEntry
-          />
-          {errors.confirmPassword && (
-            <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-          )}
-        </View>
-
-        <TouchableOpacity
-          style={styles.registerButton}
-          onPress={onRegisterButtonPress}
-        >
-          <Text style={styles.registerButtonText}>Create Account</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.orText}>or</Text>
-
-        <TouchableOpacity
-          style={styles.googleButton}
-          onPress={onGoogleRegisterPress}
-        >
-          <Image
-            source={{
-              uri: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png",
-            }}
-            style={styles.googleIcon}
-          />
-          <Text style={styles.googleButtonText}>Sign up with Google</Text>
-        </TouchableOpacity>
-
-        <View style={styles.loginContainer}>
-          <Text style={styles.loginText}>Already have an account? </Text>
-          <TouchableOpacity onPress={onLoginButtonPress}>
-            <Text style={styles.loginLink}>Sign In</Text>
+          <TouchableOpacity
+            style={styles.registerButton}
+            onPress={onRegisterButtonPress}
+          >
+            <Text style={styles.registerButtonText}>Create Account</Text>
           </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+          <Text style={styles.orText}>or</Text>
+
+          <TouchableOpacity
+            style={styles.googleButton}
+            onPress={onGoogleRegisterPress}
+          >
+            <Image
+              source={{
+                uri: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png",
+              }}
+              style={styles.googleIcon}
+            />
+            <Text style={styles.googleButtonText}>Sign up with Google</Text>
+          </TouchableOpacity>
+
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>Already have an account? </Text>
+            <TouchableOpacity onPress={onLoginButtonPress}>
+              <Text style={styles.loginLink}>Sign In</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -241,6 +256,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  keyboardContainer: {
+    flex: 1,
   },
   scrollContainer: {
     flexGrow: 1,

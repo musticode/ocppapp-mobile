@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { CameraType } from "expo-camera";
 
+import { AppHeader } from "@/components/AppHeader";
 import { CameraView, useCameraPermissions } from "expo-camera";
 
 export default function QRScanner() {
@@ -29,7 +30,13 @@ export default function QRScanner() {
     );
   }
 
-  const handleBarcodeScanned = ({ type, data }) => {
+  const handleBarcodeScanned = ({
+    type,
+    data,
+  }: {
+    type: string;
+    data: string;
+  }) => {
     setScanned(true);
     alert(`Bar code with type : ${type} and data : ${data} has been scanned!`);
     setData(data);
@@ -43,6 +50,11 @@ export default function QRScanner() {
 
   return (
     <View style={styles.container}>
+      <AppHeader
+        title="QR Scanner"
+        showBackButton={true}
+        subtitle="Scan charging station QR code"
+      />
       <CameraView
         onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
         barcodeScannerSettings={{
