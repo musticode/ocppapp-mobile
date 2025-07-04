@@ -2,14 +2,12 @@ import React from "react";
 import {
   DarkTheme,
   DefaultTheme,
-  NavigationContainer,
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
-// import { AsyncStorage } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -38,7 +36,14 @@ export default function RootLayout() {
             <Stack.Screen name="+not-found" />
           </>
         ) : (
-          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <>
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="register" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="Notifications"
+              options={{ headerShown: false }}
+            />
+          </>
         )}
       </Stack>
       <StatusBar style="auto" />
