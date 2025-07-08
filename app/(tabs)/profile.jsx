@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import Notifications from "@/components/Notifications";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import LogoutModal from "@/components/LogoutModal";
 
 export default function Profile() {
   const navigation = useNavigation();
@@ -54,6 +55,8 @@ export default function Profile() {
     },
     avatar: require("@/assets/images/react-logo.png"), // Replace with user avatar if available
   });
+
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -210,7 +213,28 @@ export default function Profile() {
           </View>
         </View>
 
-        {/* <SocialAccounts social={userProfile.social} /> */}
+        {/* Logout Section */}
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: colors.background,
+              borderColor: colors.icon + "20",
+            },
+          ]}
+        >
+          <TouchableOpacity
+            onPress={() => setLogoutModalVisible(true)}
+            style={styles.logoutButton}
+          >
+            <Text style={styles.logoutButtonText}>Logout</Text>
+          </TouchableOpacity>
+
+          <LogoutModal
+            visible={logoutModalVisible}
+            onClose={() => setLogoutModalVisible(false)}
+          />
+        </View>
       </ParallaxScrollView>
     </View>
   );
@@ -230,6 +254,7 @@ function PersonalInformation() {
 function SocialAccounts(props) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme] ?? Colors.light;
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
   return (
     <View
@@ -330,6 +355,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#888",
   },
+  logoutModalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   summaryContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -382,6 +412,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#F0F0F0",
   },
+  logoutButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  logoutButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#ffffff",
+    textAlign: "center",
+  },
   label: {
     fontSize: 16,
     flex: 1,
@@ -429,6 +472,14 @@ const styles = StyleSheet.create({
   },
   headerIcon: {
     width: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoutButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    backgroundColor: "#ff3b30",
     alignItems: "center",
     justifyContent: "center",
   },
