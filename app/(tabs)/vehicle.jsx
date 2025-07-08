@@ -71,6 +71,13 @@ export default function Vehicle() {
 
   return (
     <View style={styles.container}>
+      {/* <AppHeader
+        title="Vehicle"
+        showBackButton={true}
+        showNotifications={true}
+        showProfile={true}
+        subtitle="Your EV details"
+      /> */}
       <ParallaxScrollView
         headerBackgroundColor={{ light: "#F8F9FB", dark: "#121212" }}
       >

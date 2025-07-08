@@ -19,6 +19,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[theme].tint,
         headerShown: true,
+        header: () => null, // Use custom header component instead
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -35,7 +36,8 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <Icon name="home" size={24} color="black" />
+            // <Icon name="home" size={24} color="black" />
+            <AntDesign name="home" size={24} color="black" />
           ),
         }}
       />
@@ -45,7 +47,8 @@ export default function TabLayout() {
         options={{
           title: "Transactions",
           tabBarIcon: ({ color }) => (
-            <Icon name="credit-card" size={24} color="black" />
+            // <Icon name="credit-card" size={24} color="black" />
+            <AntDesign name="creditcard" size={24} color="black" />
           ),
         }}
       />
@@ -53,9 +56,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="qrscanner"
         options={{
-          title: "QR Scanner",
+          title: "Scan",
           tabBarIcon: ({ color }) => (
-            <Icon name="ev-station" size={24} color="black" />
+            // <Icon name="scan" size={24} color="black" />
+            <AntDesign name="scan1" size={24} color="black" />
           ),
         }}
       />
@@ -65,7 +69,8 @@ export default function TabLayout() {
         options={{
           title: "Vehicle",
           tabBarIcon: ({ color }) => (
-            <Icon name="car-electric" size={24} color="black" />
+            // <Icon name="car-electric" size={24} color="black" />
+            <AntDesign name="car" size={24} color="black" />
           ),
         }}
       />
@@ -75,7 +80,8 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => (
-            <Icon name="account" size={24} color="black" />
+            // <Icon name="account" size={24} color="black" />
+            <AntDesign name="user" size={24} color="black" />
           ),
         }}
       />
