@@ -20,14 +20,7 @@ export default function Transactions() {
 
   return (
     <View style={styles.container}>
-      {/* <AppHeader
-        title="Transactions"
-        showNotifications={true}
-        showProfile={true}
-        subtitle="Your charging history"
-      /> */}
       <TransactionList onTransactionPress={handleTransactionPress} />
-
       <TransactionModal
         visible={modalVisible}
         transaction={selectedTransaction}
@@ -40,5 +33,6 @@ export default function Transactions() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 5,
   },
 });
