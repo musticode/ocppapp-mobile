@@ -402,6 +402,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F8F9FA",
   },
   filterContainer: {
     paddingHorizontal: 20,
