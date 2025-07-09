@@ -5,246 +5,150 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image,
-  Alert,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { AppHeader } from "./AppHeader";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = useState({});
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState("+1");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [agree, setAgree] = useState(true);
 
-  const updateFormData = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
-    }
+  const onSignUp = () => {
+    // Add validation and registration logic here
+    console.log({ name, phone, countryCode, email, password, agree });
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    // First Name validation
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = "First name is required";
-    } else if (formData.firstName.trim().length < 2) {
-      newErrors.firstName = "First name must be at least 2 characters";
-    }
-
-    // Last Name validation
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = "Last name is required";
-    } else if (formData.lastName.trim().length < 2) {
-      newErrors.lastName = "Last name must be at least 2 characters";
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
-
-    // Phone validation
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^\d{10,15}$/.test(formData.phone.replace(/\D/g, ""))) {
-      newErrors.phone = "Please enter a valid phone number";
-    }
-
-    // Password validation
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password =
-        "Password must contain uppercase, lowercase, and number";
-    }
-
-    // Confirm Password validation
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const onRegisterButtonPress = () => {
-    if (validateForm()) {
-      console.log("Registration data:", formData);
-      Alert.alert(
-        "Registration Successful",
-        "Your account has been created successfully!",
-        [{ text: "OK", onPress: () => console.log("Registration completed") }]
-      );
-    }
-  };
-
-  const onGoogleRegisterPress = () => {
-    console.log("Google registration pressed");
-    Alert.alert(
-      "Google Registration",
-      "Google registration feature coming soon!"
-    );
-  };
-
-  const onLoginButtonPress = () => {
-    console.log("Back to login pressed");
-    navigation.navigate("login");
+  const onSignIn = () => {
+    // Navigate to login
+    // navigation.navigate("login");
   };
 
   return (
-    <View style={styles.container}>
-      <AppHeader
-        title="Create Account"
-        showBackButton={true}
-        subtitle="Join EV Charging"
-      />
+    <View style={styles.screen}>
       <KeyboardAvoidingView
-        style={styles.keyboardContainer}
+        style={{ flex: 1, width: "100%" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.title}>Create Account</Text>
-
-          <View style={styles.nameRow}>
-            <View style={styles.nameInputContainer}>
+          <View style={styles.card}>
+            <Text style={styles.title}>Create Account</Text>
+            <Text style={styles.subtitle}>
+              Fill your information below or register with your social account.
+            </Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Name</Text>
               <TextInput
-                style={[
-                  styles.input,
-                  styles.halfInput,
-                  errors.firstName && styles.inputError,
-                ]}
-                placeholder="First Name"
-                value={formData.firstName}
-                onChangeText={(value) => updateFormData("firstName", value)}
+                style={styles.input}
+                placeholder="John Doe"
+                value={name}
+                onChangeText={setName}
                 autoCapitalize="words"
               />
-              {errors.firstName && (
-                <Text style={styles.errorText}>{errors.firstName}</Text>
-              )}
             </View>
-
-            <View style={styles.nameInputContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Phone Number</Text>
+              <View style={styles.phoneRow}>
+                <TextInput
+                  style={styles.countryCodeInput}
+                  value={countryCode}
+                  onChangeText={setCountryCode}
+                  keyboardType="phone-pad"
+                  maxLength={4}
+                />
+                <TextInput
+                  style={[styles.input, { flex: 1, marginLeft: 8 }]}
+                  placeholder="Enter Phone Number"
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                />
+              </View>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Email</Text>
               <TextInput
-                style={[
-                  styles.input,
-                  styles.halfInput,
-                  errors.lastName && styles.inputError,
-                ]}
-                placeholder="Last Name"
-                value={formData.lastName}
-                onChangeText={(value) => updateFormData("lastName", value)}
-                autoCapitalize="words"
+                style={styles.input}
+                placeholder="example@gmail.com"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
               />
-              {errors.lastName && (
-                <Text style={styles.errorText}>{errors.lastName}</Text>
-              )}
             </View>
-          </View>
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[styles.input, errors.email && styles.inputError]}
-              placeholder="Email Address"
-              value={formData.email}
-              onChangeText={(value) => updateFormData("email", value)}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            {errors.email && (
-              <Text style={styles.errorText}>{errors.email}</Text>
-            )}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[styles.input, errors.phone && styles.inputError]}
-              placeholder="Phone Number"
-              value={formData.phone}
-              onChangeText={(value) => updateFormData("phone", value)}
-              keyboardType="phone-pad"
-            />
-            {errors.phone && (
-              <Text style={styles.errorText}>{errors.phone}</Text>
-            )}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[styles.input, errors.password && styles.inputError]}
-              placeholder="Password"
-              value={formData.password}
-              onChangeText={(value) => updateFormData("password", value)}
-              secureTextEntry
-            />
-            {errors.password && (
-              <Text style={styles.errorText}>{errors.password}</Text>
-            )}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[
-                styles.input,
-                errors.confirmPassword && styles.inputError,
-              ]}
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChangeText={(value) => updateFormData("confirmPassword", value)}
-              secureTextEntry
-            />
-            {errors.confirmPassword && (
-              <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-            )}
-          </View>
-
-          <TouchableOpacity
-            style={styles.registerButton}
-            onPress={onRegisterButtonPress}
-          >
-            <Text style={styles.registerButtonText}>Create Account</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.orText}>or</Text>
-
-          <TouchableOpacity
-            style={styles.googleButton}
-            onPress={onGoogleRegisterPress}
-          >
-            <Image
-              source={{
-                uri: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png",
-              }}
-              style={styles.googleIcon}
-            />
-            <Text style={styles.googleButtonText}>Sign up with Google</Text>
-          </TouchableOpacity>
-
-          <View style={styles.loginContainer}>
-            <Text style={styles.loginText}>Already have an account? </Text>
-            <TouchableOpacity onPress={onLoginButtonPress}>
-              <Text style={styles.loginLink}>Sign In</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Password</Text>
+              <View style={styles.passwordRow}>
+                <TextInput
+                  style={[styles.input, { flex: 1 }]}
+                  placeholder="**************"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowPassword((prev) => !prev)}
+                >
+                  <Ionicons
+                    name={showPassword ? "eye" : "eye-off"}
+                    size={22}
+                    color="#888"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.checkboxRow}
+              onPress={() => setAgree((prev) => !prev)}
+              activeOpacity={0.8}
+            >
+              <View style={[styles.checkbox, agree && styles.checkboxChecked]}>
+                {agree && <Ionicons name="checkmark" size={18} color="#fff" />}
+              </View>
+              <Text style={styles.checkboxText}>
+                Agree with{" "}
+                <Text style={styles.termsLink}>Terms &amp; Condition</Text>
+              </Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.signUpButton} onPress={onSignUp}>
+              <Text style={styles.signUpButtonText}>Sign Up</Text>
+            </TouchableOpacity>
+            <View style={styles.dividerRow}>
+              <View style={styles.divider} />
+              <Text style={styles.orText}>Or sign up with</Text>
+              <View style={styles.divider} />
+            </View>
+            <View style={styles.socialRow}>
+              <TouchableOpacity style={styles.socialBtn}>
+                <FontAwesome name="apple" size={24} color="#222" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialBtn}>
+                <FontAwesome name="google" size={24} color="#EA4335" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialBtn}>
+                <FontAwesome name="facebook" size={24} color="#1877F3" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.signinRow}>
+              <Text style={styles.signinText}>Already have an account? </Text>
+              <TouchableOpacity onPress={onSignIn}>
+                <Text style={styles.signinLink}>Sign In</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -253,121 +157,177 @@ export default function RegisterPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: "#fff",
-  },
-  keyboardContainer: {
-    flex: 1,
-  },
-  scrollContainer: {
-    flexGrow: 1,
+    backgroundColor: "#f5f5f5",
     justifyContent: "center",
     alignItems: "center",
+  },
+  card: {
+    width: "92%",
+    maxWidth: 400,
+    backgroundColor: "#fff",
+    borderRadius: 20,
     padding: 24,
-    paddingTop: 40,
-    paddingBottom: 40,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+    alignItems: "center",
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 32,
     color: "#222",
+    marginBottom: 6,
+    marginTop: 8,
+    textAlign: "center",
   },
-  nameRow: {
-    flexDirection: "row",
-    width: "100%",
-    maxWidth: 320,
-    gap: 12,
-  },
-  nameInputContainer: {
-    flex: 1,
+  subtitle: {
+    fontSize: 15,
+    color: "#888",
+    marginBottom: 24,
+    textAlign: "center",
   },
   inputContainer: {
     width: "100%",
-    maxWidth: 320,
+    marginBottom: 12,
+  },
+  inputLabel: {
+    fontSize: 15,
+    color: "#222",
+    marginBottom: 6,
+    marginLeft: 2,
   },
   input: {
     width: "100%",
     height: 48,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
+    borderColor: "#e0e0e0",
+    borderWidth: 1.2,
+    borderRadius: 10,
     paddingHorizontal: 16,
-    marginBottom: 4,
     fontSize: 16,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#fafbfc",
   },
-  halfInput: {
-    maxWidth: "100%",
+  phoneRow: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  inputError: {
-    borderColor: "#ff6b6b",
-    borderWidth: 2,
-  },
-  errorText: {
-    color: "#ff6b6b",
-    fontSize: 12,
-    marginBottom: 12,
-    marginLeft: 4,
-  },
-  registerButton: {
-    width: "100%",
-    maxWidth: 320,
+  countryCodeInput: {
+    width: 48,
     height: 48,
-    backgroundColor: "#0a7ea4",
-    borderRadius: 8,
+    borderColor: "#e0e0e0",
+    borderWidth: 1.2,
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    fontSize: 16,
+    backgroundColor: "#fafbfc",
+    textAlign: "center",
+  },
+  passwordRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 12,
+    top: 12,
+    padding: 4,
+  },
+  checkboxRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 2,
+    alignSelf: "flex-start",
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: "#1ec28b",
+    backgroundColor: "#fff",
+    marginRight: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 16,
-    marginTop: 8,
   },
-  registerButtonText: {
+  checkboxChecked: {
+    backgroundColor: "#1ec28b",
+    borderColor: "#1ec28b",
+  },
+  checkboxText: {
+    fontSize: 15,
+    color: "#222",
+  },
+  termsLink: {
+    color: "#1ec28b",
+    fontWeight: "bold",
+  },
+  signUpButton: {
+    width: "100%",
+    height: 48,
+    backgroundColor: "#1ec28b",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 18,
+  },
+  signUpButtonText: {
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
   },
-  orText: {
-    marginVertical: 8,
-    color: "#888",
-    fontSize: 16,
-  },
-  googleButton: {
+  dividerRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
     width: "100%",
-    maxWidth: 320,
-    justifyContent: "center",
-    marginBottom: 24,
+    marginVertical: 10,
   },
-  googleIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 12,
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "#e0e0e0",
   },
-  googleButtonText: {
-    fontSize: 16,
-    color: "#222",
-    fontWeight: "500",
-  },
-  loginContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  loginText: {
+  orText: {
+    marginHorizontal: 10,
     color: "#888",
-    fontSize: 16,
+    fontSize: 15,
   },
-  loginLink: {
-    color: "#0a7ea4",
-    fontSize: 16,
-    fontWeight: "600",
+  socialRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginBottom: 18,
+    marginTop: 2,
+  },
+  socialBtn: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#f7f7f7",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  signinRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 2,
+  },
+  signinText: {
+    color: "#888",
+    fontSize: 15,
+  },
+  signinLink: {
+    color: "#1ec28b",
+    fontWeight: "bold",
+    fontSize: 15,
   },
 });
