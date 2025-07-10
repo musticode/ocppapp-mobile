@@ -5,482 +5,251 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  Button,
+  ScrollView,
 } from "react-native";
-import { AppHeader } from "@/components/AppHeader";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { useNavigation } from "@react-navigation/native";
-import Notifications from "@/components/Notifications";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { Ionicons, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import LogoutModal from "@/components/LogoutModal";
+import { router } from "expo-router";
 
 export default function Profile() {
-  const navigation = useNavigation();
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme] ?? Colors.light;
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const user = {
+    name: "John Doe",
+    phone: "+1 123 **** 789",
+    avatar: require("@/assets/images/react-logo.png"),
+  };
 
-  const [creditCard, setCreditCard] = useState({
-    number: "**** **** **** 1234",
-    type: "Visa",
-    expiryDate: "12/25",
-    cardholderName: "JOHN DOE",
-  });
-
-  const [address, setAddress] = useState({
-    street: "123 Main Street",
-    city: "New York",
-    state: "NY",
-    zipCode: "10001",
-    country: "USA",
-  });
-
-  const [userProfile] = useState({
-    username: "@johndoe",
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "(123) 456-7890",
-    birthday: "May 5th, 1990",
-    country: "United States",
-    creditCard: creditCard,
-    address: address,
-    social: {
-      apple: "connected",
-      discord: "connected",
-      facebook: "needs_verification",
+  const menu = [
+    {
+      icon: <MaterialIcons name="directions-car" size={22} color="#1ec28b" />,
+      label: "My Vehicle",
+      onPress: () => router.push("/myvehicle"),
     },
-    avatar: require("@/assets/images/react-logo.png"), // Replace with user avatar if available
-  });
+    {
+      icon: <MaterialIcons name="payment" size={22} color="#1ec28b" />,
+      label: "Payment Methods",
+      onPress: () => router.push("/payments"),
+    },
+    {
+      icon: <Ionicons name="person-outline" size={22} color="#1ec28b" />,
+      label: "Personal Info.",
+      onPress: () => router.push("/personalinfo"),
+    },
+    {
+      icon: <Ionicons name="help-circle-outline" size={22} color="#1ec28b" />,
+      label: "Help Center",
+      onPress: () => router.push("/helpcenter"),
+    },
+    {
+      icon: <FontAwesome5 name="key" size={20} color="#1ec28b" />,
+      label: "Password Manager",
+      onPress: () => router.push("/passwordmanager"),
+    },
+    {
+      icon: <Ionicons name="document-text-outline" size={22} color="#1ec28b" />,
+      label: "Privacy Policy",
+      onPress: () => router.push("/privacypolicy"),
+    },
+  ];
 
-  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const handlePaymentMethods = () => {
+    router.push("/payments");
+  };
+
+  const handleMyVehicle = () => {
+    router.push("/myvehicle");
+  };
 
   return (
-    <View style={styles.container}>
-      <ParallaxScrollView
-        headerBackgroundColor={{ light: "#F8F9FB", dark: "#121212" }}
+    <View style={styles.screen}>
+      {/* Header */}
+      <View style={styles.headerRow}>
+        <TouchableOpacity style={styles.headerBtn}>
+          <Ionicons name="arrow-back" size={24} color="#222" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Account</Text>
+        <View style={{ width: 38 }} />
+      </View>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        {/* Profile Header */}
-        <View style={styles.profileHeader}>
-          <Image source={userProfile.avatar} style={styles.avatar} />
-          <View style={styles.headerTextContainer}>
-            <ThemedText type="title" style={styles.fullName}>
-              {userProfile.firstName} {userProfile.lastName}
-            </ThemedText>
-            <ThemedText style={styles.username}>
-              {userProfile.username}
-            </ThemedText>
+        {/* Card */}
+        <View style={styles.card}>
+          {/* Avatar */}
+          <View style={styles.avatarWrap}>
+            <Image source={user.avatar} style={styles.avatar} />
+            <TouchableOpacity style={styles.editBtn}>
+              <Ionicons name="pencil" size={18} color="#fff" />
+            </TouchableOpacity>
           </View>
-        </View>
-
-        {/* Profile Summary Stats */}
-        <View style={styles.summaryContainer}>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryValue}>
-              {userProfile.creditCard.type}
-            </Text>
-            <Text style={styles.summaryLabel}>Card Type</Text>
+          {/* Name & Phone */}
+          <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.phone}>{user.phone}</Text>
+          {/* Menu */}
+          <View style={styles.menuList}>
+            {menu.map((item, idx) => (
+              <TouchableOpacity
+                key={item.label}
+                style={styles.menuItem}
+                onPress={item.onPress || (() => {})}
+              >
+                <View style={styles.menuIcon}>{item.icon}</View>
+                <Text style={styles.menuLabel}>{item.label}</Text>
+                <Ionicons
+                  name="chevron-forward"
+                  size={20}
+                  color="#1ec28b"
+                  style={styles.menuArrow}
+                />
+              </TouchableOpacity>
+            ))}
           </View>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryValue}>3</Text>
-            <Text style={styles.summaryLabel}>Social Accounts</Text>
-          </View>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryValue}>Active</Text>
-            <Text style={styles.summaryLabel}>Status</Text>
-          </View>
-        </View>
-
-        {/* Personal Information Card */}
-        <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "20",
-            },
-          ]}
-        >
-          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-            PERSONAL INFORMATION
-          </ThemedText>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Username</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.username}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Name</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.firstName} {userProfile.lastName}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Phone</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.phone}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Birthday</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.birthday}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Country</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.country}
-            </Text>
-          </View>
-        </View>
-
-        {/* Credit Card Information Card */}
-        <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "20",
-            },
-          ]}
-        >
-          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-            CREDIT CARD INFORMATION
-          </ThemedText>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>
-              Card Number
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.creditCard.number}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>
-              Card Type
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.creditCard.type}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>
-              Expiry Date
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.creditCard.expiryDate}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>
-              Cardholder Name
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.creditCard.cardholderName}
-            </Text>
-          </View>
-        </View>
-
-        {/* Login Information Card */}
-        <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "20",
-            },
-          ]}
-        >
-          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-            LOGIN INFORMATION
-          </ThemedText>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Email</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {userProfile.email}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>
-              Update password
-            </Text>
-            <IconSymbol name="chevron.right" size={18} color={colors.icon} />
-          </View>
-        </View>
-
-        {/* Logout Section */}
-        <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "20",
-            },
-          ]}
-        >
+          {/* Logout */}
           <TouchableOpacity
+            style={styles.logoutBtn}
             onPress={() => setLogoutModalVisible(true)}
-            style={styles.logoutButton}
           >
-            <Text style={styles.logoutButtonText}>Logout</Text>
+            <Ionicons
+              name="log-out-outline"
+              size={20}
+              color="#ff3b30"
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
-
-          <LogoutModal
-            visible={logoutModalVisible}
-            onClose={() => setLogoutModalVisible(false)}
-          />
         </View>
-      </ParallaxScrollView>
-    </View>
-  );
-}
-
-function PersonalInformation() {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme] ?? Colors.light;
-
-  return (
-    <View>
-      <Text>Personal Information</Text>
-    </View>
-  );
-}
-
-function SocialAccounts(props) {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme] ?? Colors.light;
-  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
-
-  return (
-    <View
-      style={[
-        styles.card,
-        {
-          backgroundColor: colors.background,
-          borderColor: colors.icon + "20",
-        },
-      ]}
-    >
-      <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-        SOCIAL ACCOUNTS
-      </ThemedText>
-      <View style={styles.infoRow}>
-        <IconSymbol
-          name="applelogo"
-          size={20}
-          color="#000"
-          style={styles.socialIcon}
-        />
-        <Text style={[styles.socialLabel, { color: colors.text }]}>Apple</Text>
-        {props.social.apple === "connected" ? (
-          <Text style={[styles.socialStatus, styles.connected]}>Connected</Text>
-        ) : (
-          <Text style={[styles.socialStatus, styles.needsVerification]}>
-            Needs Verification
-          </Text>
-        )}
-      </View>
-      <View style={styles.infoRow}>
-        <IconSymbol
-          name="gamecontroller"
-          size={20}
-          color="#5865F2"
-          style={styles.socialIcon}
-        />
-        <Text style={[styles.socialLabel, { color: colors.text }]}>
-          Discord
-        </Text>
-        {props.social.discord === "connected" ? (
-          <Text style={[styles.socialStatus, styles.connected]}>Connected</Text>
-        ) : (
-          <Text style={[styles.socialStatus, styles.needsVerification]}>
-            Needs Verification
-          </Text>
-        )}
-      </View>
-      <View style={styles.infoRow}>
-        <IconSymbol
-          name="logo.facebook"
-          size={20}
-          color="#1877F3"
-          style={styles.socialIcon}
-        />
-        <Text style={[styles.socialLabel, { color: colors.text }]}>
-          Facebook
-        </Text>
-        {props.social.facebook === "connected" ? (
-          <Text style={[styles.socialStatus, styles.connected]}>Connected</Text>
-        ) : (
-          <Text style={[styles.socialStatus, styles.needsVerification]}>
-            Needs Verification
-          </Text>
-        )}
-      </View>
+      </ScrollView>
+      <LogoutModal
+        visible={logoutModalVisible}
+        onClose={() => setLogoutModalVisible(false)}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#f5f5f5",
   },
-  profileHeader: {
+  headerRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 24,
+    justifyContent: "space-between",
     paddingHorizontal: 10,
+    paddingTop: 18,
+    marginBottom: 8,
   },
-  avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    marginRight: 16,
-    backgroundColor: "#EEE",
-  },
-  headerTextContainer: {
-    flex: 1,
-  },
-  fullName: {
-    fontSize: 22,
-    fontWeight: "600",
-    marginBottom: 2,
-  },
-  username: {
-    fontSize: 16,
-    color: "#888",
-  },
-  logoutModalContainer: {
-    flex: 1,
+  headerBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: "#f7f7f7",
     justifyContent: "center",
     alignItems: "center",
-  },
-  summaryContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: "#f8f9fa",
-    marginHorizontal: 10,
-    borderRadius: 12,
-    marginBottom: 15,
-  },
-  summaryItem: {
-    alignItems: "center",
-  },
-  summaryValue: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#0a7ea4",
-  },
-  summaryLabel: {
-    fontSize: 12,
-    color: "#666",
-    marginTop: 2,
-  },
-  card: {
-    marginHorizontal: 10,
-    marginBottom: 18,
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  cardTitle: {
-    fontSize: 13,
-    color: "#888",
-    marginBottom: 10,
-    letterSpacing: 1,
-  },
-  infoRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
-  },
-  logoutButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  logoutButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#ffffff",
-    textAlign: "center",
-  },
-  label: {
-    fontSize: 16,
-    flex: 1,
-  },
-  value: {
-    fontSize: 16,
-    flex: 2,
-    textAlign: "right",
-    fontWeight: "500",
-  },
-  socialIcon: {
-    marginRight: 10,
-  },
-  socialLabel: {
-    flex: 1,
-    fontSize: 16,
-  },
-  socialStatus: {
-    fontSize: 15,
-    fontWeight: "500",
-    textAlign: "right",
-    flex: 1.2,
-  },
-  connected: {
-    color: "#2ECC40",
-  },
-  needsVerification: {
-    color: "#FF4136",
-  },
-  headerBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingTop: 8,
-    paddingBottom: 16,
-    paddingHorizontal: 4,
-    backgroundColor: "transparent",
+    marginHorizontal: 4,
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: "bold",
     color: "#222",
+    textAlign: "center",
     flex: 1,
+  },
+  scrollContent: {
+    alignItems: "center",
+    paddingBottom: 40,
+  },
+  card: {
+    width: "92%",
+    maxWidth: 400,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  avatarWrap: {
+    position: "relative",
+    marginBottom: 10,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#EEE",
+  },
+  editBtn: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    backgroundColor: "#1ec28b",
+    borderRadius: 14,
+    width: 28,
+    height: 28,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#fff",
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#222",
+    marginTop: 2,
+    marginBottom: 2,
     textAlign: "center",
   },
-  headerIcon: {
-    width: 40,
-    alignItems: "center",
-    justifyContent: "center",
+  phone: {
+    fontSize: 15,
+    color: "#888",
+    marginBottom: 18,
+    textAlign: "center",
   },
-  logoutButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    backgroundColor: "#ff3b30",
+  menuList: {
+    width: "100%",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+  menuIcon: {
+    width: 32,
+    alignItems: "center",
+    marginRight: 8,
+  },
+  menuLabel: {
+    flex: 1,
+    fontSize: 16,
+    color: "#222",
+  },
+  menuArrow: {
+    marginLeft: 8,
+  },
+  logoutBtn: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 18,
+    backgroundColor: "#fff0f0",
+    borderRadius: 10,
+    paddingVertical: 12,
+    width: "100%",
+  },
+  logoutText: {
+    color: "#ff3b30",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });

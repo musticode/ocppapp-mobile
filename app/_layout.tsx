@@ -40,8 +40,24 @@ export default function RootLayout() {
             <Stack.Screen name="landing" options={{ headerShown: false }} />
             <Stack.Screen name="login" options={{ headerShown: false }} />
             <Stack.Screen name="register" options={{ headerShown: false }} />
+            <Stack.Screen name="payments" options={{ headerShown: false }} />
+            <Stack.Screen name="helpcenter" options={{ headerShown: false }} />
+
             <Stack.Screen
-              name="Notifications"
+              name="passwordmanager"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="privacypolicy"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="myvehicle" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="personalinfo"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="personalinfo"
               options={{ headerShown: false }}
             />
           </>
