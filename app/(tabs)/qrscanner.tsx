@@ -1,211 +1,239 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
-import { CameraType } from "expo-camera";
-
-import { AppHeader } from "@/components/AppHeader";
-import { CameraView, useCameraPermissions } from "expo-camera";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import {
+  BarcodeScanningResult,
+  CameraView,
+  useCameraPermissions,
+} from "expo-camera";
 
 export default function QRScanner() {
-  const [data, setData] = useState<string | null>(null);
-
-  const [facing, setFacing] = useState<CameraType>("back");
+  const router = useRouter();
+  const [scanning, setScanning] = useState(true);
   const [permission, requestPermission] = useCameraPermissions();
-  const [scanned, setScanned] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
+  const [scannedData, setScannedData] = useState<string | null>(null);
 
   if (!permission) {
-    // Camera permissions are still loading.
     return <View />;
   }
-
   if (!permission.granted) {
-    // Camera permissions are not granted yet.
     return (
-      <View style={styles.container}>
-        <Text style={styles.permissionText}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="grant permission" />
+      <View style={styles.screen}>
+        <View style={styles.card}>
+          <Text style={styles.permissionText}>
+            We need your permission to show the camera
+          </Text>
+          <TouchableOpacity style={styles.scanBtn} onPress={requestPermission}>
+            <Text style={styles.scanBtnText}>Grant Permission</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 
-  const handleBarcodeScanned = ({
-    type,
-    data,
-  }: {
-    type: string;
-    data: string;
-  }) => {
-    setScanned(true);
-    alert(`Bar code with type : ${type} and data : ${data} has been scanned!`);
-    setData(data);
-  };
-
-  const handleTapToScanAgain = () => {
-    setScanned(false);
-    setData(null);
-    setAlertOpen(false);
+  const handleBarcodeScanned = (scanningResult: BarcodeScanningResult) => {
+    console.log("Barcode scanned:", scanningResult.data);
+    setScanning(false);
+    setScannedData(scanningResult.data);
   };
 
   return (
-    <View style={styles.container}>
-      <AppHeader
-        title="QR Scanner"
-        showBackButton={true}
-        subtitle="Scan charging station QR code"
-      />
-      <CameraView
-        onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ["qr", "pdf417"],
-        }}
-        style={StyleSheet.absoluteFillObject}
-      />
-      {scanned && (
-        <Button title={"Tap to Scan Again"} onPress={handleTapToScanAgain} />
-      )}
+    <View style={styles.screen}>
+      <View style={styles.card}>
+        {/* Header */}
+        <View style={styles.headerRow}>
+          <TouchableOpacity
+            style={styles.backBtn}
+            onPress={() => router.back()}
+          >
+            <Ionicons name="arrow-back" size={24} color="#222" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Scan Bar code</Text>
+          <View style={{ width: 32 }} />
+        </View>
+        {/* Scanner Frame with Camera */}
+        <View style={styles.scannerFrameWrap}>
+          <View style={styles.scannerFrame}>
+            <CameraView
+              style={styles.camera}
+              // Add barcode scanning logic as needed
+              onBarcodeScanned={handleBarcodeScanned}
+            />
+            {/* Green corners */}
+            <View style={[styles.corner, styles.cornerTL]} />
+            <View style={[styles.corner, styles.cornerTR]} />
+            <View style={[styles.corner, styles.cornerBL]} />
+            <View style={[styles.corner, styles.cornerBR]} />
+          </View>
+        </View>
+        {/* Scanning text */}
+        <Text style={styles.scanningText}>
+          {scanning ? "Scanning Code..." : scannedData}
+        </Text>
+        {/* Icon row */}
+        <View style={styles.iconRow}>
+          <TouchableOpacity style={styles.iconBtn}>
+            <Ionicons name="image-outline" size={26} color="#888" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconBtn}>
+            <MaterialCommunityIcons
+              name="keyboard-outline"
+              size={26}
+              color="#888"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconBtn}>
+            <Ionicons name="flash-outline" size={26} color="#888" />
+          </TouchableOpacity>
+        </View>
+        {/* Scan button */}
+        <TouchableOpacity style={styles.scanBtn}>
+          <Text style={styles.scanBtnText}>Scan QR Code</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: "#000",
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    backgroundColor: "transparent",
-    flexDirection: "row",
-    margin: 20,
-  },
-  centerContent: {
-    flex: 1,
+    backgroundColor: "#f5f5f5",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+  },
+  card: {
+    width: "92%",
+    maxWidth: 400,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+    alignItems: "center",
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 10,
+  },
+  backBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#222",
+    textAlign: "center",
+    flex: 1,
+  },
+  scannerFrameWrap: {
+    width: "100%",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  scannerFrame: {
+    width: 220,
+    height: 220,
+    borderRadius: 18,
+    backgroundColor: "#f8fefb",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    marginBottom: 8,
+    overflow: "hidden",
+  },
+  camera: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 18,
+  },
+  corner: {
+    position: "absolute",
+    width: 38,
+    height: 38,
+    borderColor: "#1ec28b",
+  },
+  cornerTL: {
+    top: 0,
+    left: 0,
+    borderTopWidth: 4,
+    borderLeftWidth: 4,
+    borderRadius: 18,
+  },
+  cornerTR: {
+    top: 0,
+    right: 0,
+    borderTopWidth: 4,
+    borderRightWidth: 4,
+    borderRadius: 18,
+  },
+  cornerBL: {
+    bottom: 0,
+    left: 0,
+    borderBottomWidth: 4,
+    borderLeftWidth: 4,
+    borderRadius: 18,
+  },
+  cornerBR: {
+    bottom: 0,
+    right: 0,
+    borderBottomWidth: 4,
+    borderRightWidth: 4,
+    borderRadius: 18,
+  },
+  scanningText: {
+    fontSize: 16,
+    color: "#888",
+    marginVertical: 10,
+    textAlign: "center",
+  },
+  iconRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  iconBtn: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#f7f7f7",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  scanBtn: {
+    width: "100%",
+    height: 48,
+    backgroundColor: "#1ec28b",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  scanBtnText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
   permissionText: {
     fontSize: 18,
-    color: "#fff",
+    color: "#888",
     textAlign: "center",
-    marginTop: 20,
-  },
-  permissionSubtext: {
-    fontSize: 14,
-    color: "#ccc",
-    textAlign: "center",
-    marginTop: 10,
-    lineHeight: 20,
-  },
-  button: {
-    backgroundColor: "#007AFF",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  topBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 50,
-    paddingBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
-  scannerFrame: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    width: 250,
-    height: 250,
-    marginLeft: -125,
-    marginTop: -125,
-  },
-  cornerTL: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: 30,
-    height: 30,
-    borderTopWidth: 3,
-    borderLeftWidth: 3,
-    borderColor: "#007AFF",
-  },
-  cornerTR: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    width: 30,
-    height: 30,
-    borderTopWidth: 3,
-    borderRightWidth: 3,
-    borderColor: "#007AFF",
-  },
-  cornerBL: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    width: 30,
-    height: 30,
-    borderBottomWidth: 3,
-    borderLeftWidth: 3,
-    borderColor: "#007AFF",
-  },
-  cornerBR: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: 30,
-    height: 30,
-    borderBottomWidth: 3,
-    borderRightWidth: 3,
-    borderColor: "#007AFF",
-  },
-  bottomControls: {
-    paddingHorizontal: 20,
-    paddingBottom: 50,
-    alignItems: "center",
-  },
-  scanButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#007AFF",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 25,
-  },
-  scanButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-    marginLeft: 8,
-  },
-  instructionText: {
-    color: "white",
-    fontSize: 16,
-    textAlign: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
+    marginBottom: 20,
   },
 });

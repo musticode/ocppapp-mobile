@@ -1,117 +1,79 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-interface TransactionDetailsProps {
-  transaction: any;
-  onClose: () => void;
+interface UserInfoCardProps {
+  user: any;
 }
 
-export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
-  transaction,
-  onClose,
-}) => {
+export default function UserInfoCard({ user }: UserInfoCardProps) {
   return (
     <View style={styles.container}>
-      {/* Header
-      <View style={styles.headerRow}>
-        <TouchableOpacity style={styles.headerBtn} onPress={onClose}>
-          <Ionicons name="arrow-back" size={24} color="#222" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Charging Details</Text>
-        <View style={{ width: 38 }} />
-      </View> */}
       {/* Card Content */}
       <View style={styles.card}>
         <View style={styles.cardHeaderRow}>
-          <View>
-            <Text style={styles.dateText}>
-              {new Date(transaction.date).toLocaleDateString("en-US", {
-                month: "short",
-                day: "2-digit",
-                year: "numeric",
-              })}
-            </Text>
-            <Text style={styles.timeText}>
-              {new Date(transaction.date).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              })}
-            </Text>
-          </View>
           <View style={styles.statusRow}>
             <Text
               style={[
                 styles.statusText,
-                { color: getStatusColor(transaction.status) },
+                { color: getStatusColor(user.status) },
               ]}
             >
-              {transaction.status}
+              {user.status}
             </Text>
           </View>
         </View>
         <View style={styles.stationRow}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.stationName}>{transaction.stationName}</Text>
+            <Text style={styles.stationName}>{user.name}</Text>
             <View style={styles.locationRow}>
-              <Ionicons
-                name="location-outline"
-                size={15}
-                color="#1ec28b"
-                style={{ marginRight: 3 }}
+              <MaterialIcons
+                name="account-circle"
+                size={22}
+                color="#222"
+                style={{ marginBottom: 2 }}
               />
-              <Text style={styles.locationText}>{transaction.location}</Text>
+              <Text style={styles.locationText}>{user.name}</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.directionBtn}>
-            <Ionicons name="paper-plane" size={22} color="#fff" />
+          <TouchableOpacity style={styles.directionBtn} onPress={() => {}}>
+            <Ionicons name="person" size={22} color="#fff" />
           </TouchableOpacity>
         </View>
         <View style={styles.metricsRow}>
           <View style={styles.metricCol}>
-            <MaterialIcons
-              name="ev-station"
-              size={22}
-              color="#222"
-              style={{ marginBottom: 2 }}
-            />
-            <Text style={styles.metricLabel}>Tesla (Plug)</Text>
+            <Text style={styles.metricValue}>{user.membershipLevel}</Text>
+            <Text style={styles.metricLabel}>Membership Level</Text>
           </View>
           <View style={styles.metricCol}>
-            <Text style={styles.metricValue}>{transaction.maxPower}</Text>
-            <Text style={styles.metricLabel}>Max. Power</Text>
-          </View>
-          <View style={styles.metricCol}>
-            <Text style={styles.metricValue}>{transaction.duration}</Text>
-            <Text style={styles.metricLabel}>Duration</Text>
-          </View>
-          <View style={styles.metricCol}>
-            <Text style={styles.metricValue}>{transaction.amount}</Text>
-            <Text style={styles.metricLabel}>Amount</Text>
+            <Text style={styles.metricValue}>{user.phone}</Text>
+            <Text style={styles.metricLabel}>Phone</Text>
           </View>
         </View>
-        <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-            <Text style={styles.cancelBtnText}>Close</Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.viewBtn}>
+        <View style={styles.metricsRow}>
+          <View style={styles.metricCol}>
+            <Text style={styles.metricValue}>{user.email}</Text>
+            <Text style={styles.metricLabel}>Email</Text>
+          </View>
+        </View>
+        {/* <View style={styles.actionRow}>
+          <TouchableOpacity style={styles.viewBtn} onPress={() => {}}>
             <Text style={styles.viewBtnText}>View</Text>
           </TouchableOpacity> */}
-        </View>
+        {/* <TouchableOpacity style={styles.viewBtn}>
+            <Text style={styles.viewBtnText}>View</Text>
+          </TouchableOpacity> */}
+        {/* </View> */}
       </View>
     </View>
   );
-};
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case "Upcomming":
+    case "Active":
       return "#1ec28b";
-    case "Completed":
+    case "Inactive":
       return "#888";
-    case "Cancelled":
-      return "#F44336";
     default:
       return "#888";
   }
@@ -180,8 +142,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   statusText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
+    borderWidth: 1,
+    borderColor: "#1ec28b",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
   },
   stationRow: {
     flexDirection: "row",

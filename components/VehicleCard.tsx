@@ -1,67 +1,31 @@
-import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
-interface TransactionDetailsProps {
-  transaction: any;
-  onClose: () => void;
+interface VehicleCardProps {
+  vehicle: any;
 }
 
-export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
-  transaction,
-  onClose,
-}) => {
+export default function VehicleCard({ vehicle }: VehicleCardProps) {
+  const router = useRouter();
   return (
     <View style={styles.container}>
-      {/* Header
-      <View style={styles.headerRow}>
-        <TouchableOpacity style={styles.headerBtn} onPress={onClose}>
-          <Ionicons name="arrow-back" size={24} color="#222" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Charging Details</Text>
-        <View style={{ width: 38 }} />
-      </View> */}
       {/* Card Content */}
       <View style={styles.card}>
         <View style={styles.cardHeaderRow}>
-          <View>
-            <Text style={styles.dateText}>
-              {new Date(transaction.date).toLocaleDateString("en-US", {
-                month: "short",
-                day: "2-digit",
-                year: "numeric",
-              })}
-            </Text>
-            <Text style={styles.timeText}>
-              {new Date(transaction.date).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              })}
-            </Text>
-          </View>
-          <View style={styles.statusRow}>
-            <Text
-              style={[
-                styles.statusText,
-                { color: getStatusColor(transaction.status) },
-              ]}
-            >
-              {transaction.status}
-            </Text>
-          </View>
+          <View style={styles.statusRow}></View>
         </View>
         <View style={styles.stationRow}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.stationName}>{transaction.stationName}</Text>
+            <Text style={styles.stationName}>{vehicle.model}</Text>
             <View style={styles.locationRow}>
               <Ionicons
-                name="location-outline"
+                name="car-sport-outline"
                 size={15}
                 color="#1ec28b"
                 style={{ marginRight: 3 }}
               />
-              <Text style={styles.locationText}>{transaction.location}</Text>
+              <Text style={styles.locationText}>{vehicle.brand}</Text>
             </View>
           </View>
           <TouchableOpacity style={styles.directionBtn}>
@@ -70,31 +34,39 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
         </View>
         <View style={styles.metricsRow}>
           <View style={styles.metricCol}>
-            <MaterialIcons
-              name="ev-station"
+            <Ionicons
+              name="car-sport-outline"
               size={22}
               color="#222"
               style={{ marginBottom: 2 }}
             />
-            <Text style={styles.metricLabel}>Tesla (Plug)</Text>
+            <Text style={styles.metricLabel}>{vehicle.model}</Text>
           </View>
           <View style={styles.metricCol}>
-            <Text style={styles.metricValue}>{transaction.maxPower}</Text>
-            <Text style={styles.metricLabel}>Max. Power</Text>
+            <Text style={styles.metricValue}>{vehicle.range}</Text>
+            <Text style={styles.metricLabel}>Range</Text>
           </View>
           <View style={styles.metricCol}>
-            <Text style={styles.metricValue}>{transaction.duration}</Text>
-            <Text style={styles.metricLabel}>Duration</Text>
+            <Text style={styles.metricValue}>{vehicle.batteryLevel}</Text>
+            <Text style={styles.metricLabel}>Battery Level</Text>
           </View>
           <View style={styles.metricCol}>
-            <Text style={styles.metricValue}>{transaction.amount}</Text>
-            <Text style={styles.metricLabel}>Amount</Text>
+            <Text style={styles.metricValue}>{vehicle.lastCharged}</Text>
+            <Text style={styles.metricLabel}>Last Charged</Text>
           </View>
         </View>
         <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-            <Text style={styles.cancelBtnText}>Close</Text>
+          <TouchableOpacity
+            style={styles.viewBtn}
+            onPress={() => {
+              router.push("/myvehicle");
+            }}
+          >
+            <Text style={styles.viewBtnText}>View</Text>
           </TouchableOpacity>
+          {/* <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
+            <Text style={styles.cancelBtnText}>Close</Text>
+          </TouchableOpacity> */}
           {/* <TouchableOpacity style={styles.viewBtn}>
             <Text style={styles.viewBtnText}>View</Text>
           </TouchableOpacity> */}
@@ -102,7 +74,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
       </View>
     </View>
   );
-};
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
