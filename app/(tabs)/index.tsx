@@ -16,6 +16,10 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { TransactionDetails } from "@/components/TransactionDetails";
+import TransactionCard from "@/components/TransactionCard";
+import VehicleCard from "@/components/VehicleCard";
+import UserInfoCard from "@/components/UserInfoCard";
 
 const { width } = Dimensions.get("window");
 
@@ -27,6 +31,8 @@ const mockUser = {
   membershipLevel: "Premium",
   totalCharges: 127,
   totalSavings: 45.2,
+  phone: "+1234567890",
+  status: "Active",
 };
 
 const mockLastTransaction = {
@@ -78,7 +84,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={styles.screen}>
       <ParallaxScrollView
         headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
         headerImage={
@@ -89,7 +95,7 @@ export default function HomeScreen() {
         }
       >
         {/* User Info Card */}
-        <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
+        {/* <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
           <View style={styles.userCardHeader}>
             <View style={styles.userAvatar}>
               <Text style={styles.avatarText}>{mockUser.avatar}</Text>
@@ -130,10 +136,13 @@ export default function HomeScreen() {
               </Text>
             </View>
           </View>
-        </ThemedView>
+        </ThemedView> */}
+        <UserInfoCard user={mockUser} />
+
+        <VehicleCard vehicle={mockCar} />
 
         {/* Car Status Card */}
-        <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
+        {/* <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
           <View style={styles.carCardHeader}>
             <View style={styles.carIcon}>
               <Text style={styles.carEmoji}>🚗</Text>
@@ -177,70 +186,12 @@ export default function HomeScreen() {
               </Text>
             </View>
           </View>
-        </ThemedView>
+        </ThemedView> */}
 
-        {/* Last Transaction Card */}
-        <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
-          <View style={styles.transactionHeader}>
-            <ThemedText type="subtitle">Last Transaction</ThemedText>
-            <TouchableOpacity>
-              <Text style={[styles.viewAllText, { color: colors.tint }]}>
-                View All
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.transactionContent}>
-            <View style={styles.stationInfo}>
-              <Text
-                style={[styles.stationName, { color: colors.text }]}
-                numberOfLines={1}
-              >
-                {mockLastTransaction.stationName}
-              </Text>
-              <Text
-                style={[styles.stationLocation, { color: colors.icon }]}
-                numberOfLines={1}
-              >
-                📍 {mockLastTransaction.location}
-              </Text>
-              <Text style={[styles.transactionDate, { color: colors.icon }]}>
-                {formatDate(mockLastTransaction.date)} at{" "}
-                {formatTime(mockLastTransaction.date)}
-              </Text>
-            </View>
-
-            <View style={styles.transactionMetrics}>
-              <View style={styles.transactionMetric}>
-                <Text style={[styles.metricValue, { color: colors.tint }]}>
-                  {mockLastTransaction.energyDelivered} kWh
-                </Text>
-                <Text style={[styles.metricLabel, { color: colors.icon }]}>
-                  Energy
-                </Text>
-              </View>
-              <View style={styles.transactionMetric}>
-                <Text style={[styles.metricValue, { color: colors.tint }]}>
-                  {mockLastTransaction.duration} min
-                </Text>
-                <Text style={[styles.metricLabel, { color: colors.icon }]}>
-                  Duration
-                </Text>
-              </View>
-              <View style={styles.transactionMetric}>
-                <Text style={[styles.metricValue, { color: colors.tint }]}>
-                  ${mockLastTransaction.cost.toFixed(2)}
-                </Text>
-                <Text style={[styles.metricLabel, { color: colors.icon }]}>
-                  Cost
-                </Text>
-              </View>
-            </View>
-          </View>
-        </ThemedView>
+        <TransactionCard transaction={mockLastTransaction} onClose={() => {}} />
 
         {/* Quick Actions */}
-        <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
+        {/* <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
           <ThemedText type="subtitle" style={styles.quickActionsTitle}>
             Quick Actions
           </ThemedText>
@@ -290,7 +241,7 @@ export default function HomeScreen() {
               </Text>
             </TouchableOpacity>
           </View>
-        </ThemedView>
+        </ThemedView> */}
       </ParallaxScrollView>
     </View>
   );
@@ -315,18 +266,18 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     marginTop: 4,
   },
-  card: {
-    marginHorizontal: 16,
-    marginBottom: 16,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
+  // card: {
+  //   marginHorizontal: 16,
+  //   marginBottom: 16,
+  //   padding: 16,
+  //   borderRadius: 12,
+  //   borderWidth: 1,
+  //   shadowColor: "#000",
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowOpacity: 0.1,
+  //   shadowRadius: 4,
+  //   elevation: 3,
+  // },
   userCardHeader: {
     flexDirection: "row",
     alignItems: "center",
@@ -343,6 +294,7 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     fontSize: 24,
+    color: "#222",
   },
   userInfo: {
     flex: 1,
@@ -514,5 +466,143 @@ const styles = StyleSheet.create({
   actionText: {
     fontSize: 14,
     fontWeight: "500",
+  },
+  screen: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  card: {
+    width: "92%",
+    maxWidth: 400,
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#222",
+    marginBottom: 6,
+    marginTop: 8,
+    textAlign: "center",
+  },
+  subtitle: {
+    fontSize: 15,
+    color: "#888",
+    marginBottom: 24,
+    textAlign: "center",
+  },
+  inputContainer: {
+    width: "100%",
+    marginBottom: 12,
+  },
+  inputLabel: {
+    fontSize: 15,
+    color: "#222",
+    marginBottom: 6,
+    marginLeft: 2,
+  },
+  input: {
+    width: "100%",
+    height: 48,
+    borderColor: "#e0e0e0",
+    borderWidth: 1.2,
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    backgroundColor: "#fafbfc",
+  },
+  passwordRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 12,
+    top: 12,
+    padding: 4,
+  },
+  forgotPasswordBtn: {
+    alignSelf: "flex-end",
+    marginTop: 4,
+    marginBottom: 2,
+  },
+  forgotPasswordText: {
+    color: "#1ec28b",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  signInButton: {
+    width: "100%",
+    height: 48,
+    backgroundColor: "#1ec28b",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 18,
+  },
+  signInButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  dividerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    marginVertical: 10,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "#e0e0e0",
+  },
+  orText: {
+    marginHorizontal: 10,
+    color: "#888",
+    fontSize: 15,
+  },
+  socialRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    marginBottom: 18,
+    marginTop: 2,
+  },
+  socialBtn: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#f7f7f7",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  signupRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 2,
+  },
+  signupText: {
+    color: "#888",
+    fontSize: 15,
+  },
+  signupLink: {
+    color: "#1ec28b",
+    fontWeight: "bold",
+    fontSize: 15,
   },
 });

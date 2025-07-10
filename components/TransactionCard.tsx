@@ -1,26 +1,17 @@
-import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
-interface TransactionDetailsProps {
+interface TransactionCardProps {
   transaction: any;
   onClose: () => void;
 }
 
-export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
+export default function TransactionCard({
   transaction,
   onClose,
-}) => {
+}: TransactionCardProps) {
   return (
     <View style={styles.container}>
-      {/* Header
-      <View style={styles.headerRow}>
-        <TouchableOpacity style={styles.headerBtn} onPress={onClose}>
-          <Ionicons name="arrow-back" size={24} color="#222" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Charging Details</Text>
-        <View style={{ width: 38 }} />
-      </View> */}
       {/* Card Content */}
       <View style={styles.card}>
         <View style={styles.cardHeaderRow}>
@@ -76,25 +67,27 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
               color="#222"
               style={{ marginBottom: 2 }}
             />
-            <Text style={styles.metricLabel}>Tesla (Plug)</Text>
+            <Text style={styles.metricLabel}>{transaction.stationName}</Text>
           </View>
           <View style={styles.metricCol}>
-            <Text style={styles.metricValue}>{transaction.maxPower}</Text>
-            <Text style={styles.metricLabel}>Max. Power</Text>
+            <Text style={styles.metricValue}>
+              {transaction.energyDelivered}
+            </Text>
+            <Text style={styles.metricLabel}>Energy Delivered</Text>
           </View>
           <View style={styles.metricCol}>
-            <Text style={styles.metricValue}>{transaction.duration}</Text>
-            <Text style={styles.metricLabel}>Duration</Text>
+            <Text style={styles.metricValue}>{transaction.cost}</Text>
+            <Text style={styles.metricLabel}>Cost</Text>
           </View>
           <View style={styles.metricCol}>
-            <Text style={styles.metricValue}>{transaction.amount}</Text>
-            <Text style={styles.metricLabel}>Amount</Text>
+            <Text style={styles.metricValue}>{transaction.paymentMethod}</Text>
+            <Text style={styles.metricLabel}>Payment Method</Text>
           </View>
         </View>
         <View style={styles.actionRow}>
-          <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
+          {/* <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
             <Text style={styles.cancelBtnText}>Close</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* <TouchableOpacity style={styles.viewBtn}>
             <Text style={styles.viewBtnText}>View</Text>
           </TouchableOpacity> */}
@@ -102,7 +95,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
       </View>
     </View>
   );
-};
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
