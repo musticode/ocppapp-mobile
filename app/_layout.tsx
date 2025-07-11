@@ -60,6 +60,10 @@ export default function RootLayout() {
               name="personalinfo"
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="activesession"
+              options={{ headerShown: false }}
+            />
           </>
         )}
       </Stack>
