@@ -15,6 +15,8 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { BatteryStatusCard } from "@/components/BatteryStatusCard";
+import { VehicleInfoCard } from "@/components/VehicleInfoCard";
 
 const { width } = Dimensions.get("window");
 
@@ -22,7 +24,7 @@ export default function Vehicle() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme] ?? Colors.light;
 
-  const [vehicleData] = useState({
+  const [vehicleData, setVehicleData] = useState({
     make: "Tesla",
     model: "Model 3",
     year: "2023",
@@ -117,8 +119,14 @@ export default function Vehicle() {
           </View>
         </View>
 
+        <BatteryStatusCard
+          batteryLevel={`${vehicleData.currentCharge}%`}
+          estimatedRange={`${vehicleData.range} km`}
+          efficiency={`${vehicleData.efficiency} km/kWh`}
+        />
+
         {/* Battery Status Card */}
-        <View
+        {/* <View
           style={[
             styles.card,
             {
@@ -172,10 +180,11 @@ export default function Vehicle() {
               ]}
             />
           </View>
-        </View>
+        </View> */}
 
+        <VehicleInfoCard vehicle={vehicleData} />
         {/* Vehicle Information Card */}
-        <View
+        {/* <View
           style={[
             styles.card,
             {
@@ -225,7 +234,7 @@ export default function Vehicle() {
               {vehicleData.totalMiles.toLocaleString()} mi
             </Text>
           </View>
-        </View>
+        </View> */}
 
         {/* Charging Statistics Card */}
         <View
