@@ -15,7 +15,7 @@ const mockTransactions = [
     id: "1",
     stationName: "Chargepoint Charging Station",
     location: "451 Crescenty near BC V6Z",
-    date: "2024-12-17T07:20:00Z",
+    date: "2025-07-10T07:20:00Z",
     plugType: "Tesla (Plug)",
     maxPower: "100 kW",
     duration: "1 Hour",
