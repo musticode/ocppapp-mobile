@@ -28,7 +28,7 @@ export const BatteryStatusCard = ({
         </View>
         <View style={styles.stationRow}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.stationName}>Car Status</Text>
+            <Text style={styles.stationName}>Battery Status</Text>
           </View>
         </View>
         <View style={styles.metricsRow}>

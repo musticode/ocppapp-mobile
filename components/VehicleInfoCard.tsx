@@ -66,6 +66,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flex: 1,
   },
+  cardTitle: {
+    fontSize: 13,
+    color: "#888",
+    marginBottom: 16,
+    letterSpacing: 1,
+  },
   card: {
     backgroundColor: "#fff",
     borderRadius: 16,
