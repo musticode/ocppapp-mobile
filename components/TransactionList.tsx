@@ -7,7 +7,12 @@ import {
   TouchableOpacity,
   Switch,
 } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+//import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 // Mock transaction data - replace with real API data
 const mockTransactions = [
@@ -71,6 +76,30 @@ const mockTransactions = [
     status: "All",
     active: true,
   },
+  {
+    id: "6",
+    stationName: "Chargepoint Charging Station",
+    location: "451 Crescenty near BC V6Z",
+    date: "2024-12-17T07:20:00Z",
+    plugType: "CCS1",
+    maxPower: "100 kW",
+    duration: "1 Hour",
+    amount: "$25.32",
+    status: "All",
+    active: true,
+  },
+  {
+    id: "7",
+    stationName: "Chargepoint Charging Station",
+    location: "451 Crescenty near BC V6Z",
+    date: "2024-12-17T07:20:00Z",
+    plugType: "CCS2",
+    maxPower: "100 kW",
+    duration: "1 Hour",
+    amount: "$25.32",
+    status: "All",
+    active: true,
+  },
 ];
 
 const getStatusColor = (status: string) => {
@@ -112,13 +141,6 @@ const TransactionCard = ({
             })}
           </Text>
         </View>
-        {/* <Switch
-          value={transaction.active}
-          trackColor={{ false: "#e0e0e0", true: "#1ec28b" }}
-          thumbColor={transaction.active ? "#1ec28b" : "#ccc"}
-          style={{ transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] }}
-          disabled
-        /> */}
       </View>
       <View style={styles.stationRow}>
         <View style={{ flex: 1 }}>
@@ -142,13 +164,31 @@ const TransactionCard = ({
       </View>
       <View style={styles.metricsRow}>
         <View style={styles.metricCol}>
-          <MaterialIcons
-            name="ev-station"
-            size={22}
-            color="#222"
-            style={{ marginBottom: 2 }}
-          />
-          <Text style={styles.metricLabel}>Tesla (Plug)</Text>
+          {transaction.plugType === "CCS1" && (
+            <MaterialCommunityIcons
+              name="ev-plug-ccs1"
+              size={24}
+              color="black"
+              style={{ marginBottom: 2 }}
+            />
+          )}
+          {transaction.plugType === "CCS2" && (
+            <MaterialCommunityIcons
+              name="ev-plug-ccs2"
+              size={24}
+              color="black"
+              style={{ marginBottom: 2 }}
+            />
+          )}
+          {transaction.plugType === "Tesla (Plug)" && (
+            <MaterialIcons
+              name="ev-station"
+              size={22}
+              color="#222"
+              style={{ marginBottom: 2 }}
+            />
+          )}
+          <Text style={styles.metricLabel}>{transaction.plugType}</Text>
         </View>
         <View style={styles.metricCol}>
           <Text style={styles.metricValue}>{transaction.maxPower}</Text>
