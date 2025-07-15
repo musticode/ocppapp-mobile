@@ -73,13 +73,6 @@ export default function Vehicle() {
 
   return (
     <View style={styles.container}>
-      {/* <AppHeader
-        title="Vehicle"
-        showBackButton={true}
-        showNotifications={true}
-        showProfile={true}
-        subtitle="Your EV details"
-      /> */}
       <ParallaxScrollView
         headerBackgroundColor={{ light: "#F8F9FB", dark: "#121212" }}
       >
@@ -99,26 +92,7 @@ export default function Vehicle() {
           </View>
         </View>
 
-        {/* Vehicle Summary Stats */}
-        <View style={styles.summaryContainer}>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryValue}>
-              {vehicleData.currentCharge}%
-            </Text>
-            <Text style={styles.summaryLabel}>Battery</Text>
-          </View>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryValue}>{vehicleData.range} mi</Text>
-            <Text style={styles.summaryLabel}>Range</Text>
-          </View>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryValue}>
-              {vehicleData.totalMiles.toLocaleString()}
-            </Text>
-            <Text style={styles.summaryLabel}>Total Miles</Text>
-          </View>
-        </View>
-
+        {/* Battery Status Card */}
         <BatteryStatusCard
           batteryLevel={`${vehicleData.currentCharge}%`}
           estimatedRange={`${vehicleData.range} km`}

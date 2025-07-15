@@ -10,6 +10,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import axiosService from "../service/axiosService";
 
 export default function LoginPage() {
   const navigation = useNavigation();
@@ -22,6 +23,27 @@ export default function LoginPage() {
       await AsyncStorage.setItem("loginData", value);
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const loginWithEmail = async (email, password) => {
+    if (!email || !password) {
+      console.log("Please enter your email and password");
+      return;
+    }
+
+    const loginData = {
+      email: email,
+      password: password,
+    };
+
+    try {
+      const response = await axiosService.post("/auth/customerLogin", {
+        loginData,
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   };
 
