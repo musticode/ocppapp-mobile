@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import axiosService from "../service/axiosService";
+import { router } from "expo-router";
 
 export default function LoginPage() {
   const navigation = useNavigation();
@@ -32,16 +33,33 @@ export default function LoginPage() {
       return;
     }
 
-    const loginData = {
-      email: email,
+    const requestData = {
+      mail: email,
       password: password,
     };
 
+    /**
+     * test user
+     * {
+     * "mail": "mustafakaratas2345@mail.com",
+     * "password": "mustafakaratas1"
+     * }
+     *
+     */
+
     try {
-      const response = await axiosService.post("/auth/customerLogin", {
-        loginData,
-      });
+      const response = await axiosService.post(
+        "/auth/customerLogin",
+        requestData
+      );
+
       console.log(response);
+
+      if (response.status === 200) {
+        storeLoginData(response.data);
+        await AsyncStorage.setItem("token", response.data.token);
+        router.push("/");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -49,6 +67,7 @@ export default function LoginPage() {
 
   const onLogginButtonPress = () => {
     console.log("Login button pressed");
+    loginWithEmail(email, password);
   };
 
   const onRegisterButtonPress = () => {

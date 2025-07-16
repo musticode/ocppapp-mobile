@@ -3,7 +3,7 @@
 
 const ENV = {
   development: {
-    VITE_CSMS_APPLICATION_API_URL: "http://localhost:8081",
+    VITE_CSMS_APPLICATION_API_URL: "http://localhost:8080/api",
   },
   production: {
     VITE_CSMS_APPLICATION_API_URL: "https://your-production-api.com",

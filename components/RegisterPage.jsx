@@ -10,24 +10,56 @@ import {
   Platform,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import axiosService from "../service/axiosService";
+import { router } from "expo-router";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
+  const [identityNumber, setIdentityNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [agree, setAgree] = useState(true);
 
-  const onSignUp = () => {
+  const onSignUp = async () => {
+    if (!name || !phone || !countryCode || !email || !password || !agree) {
+      console.log("Please fill all fields");
+      return;
+    }
+
     // Add validation and registration logic here
     console.log({ name, phone, countryCode, email, password, agree });
+
+    const customerRegisterUrl = "/auth/customerRegister";
+
+    const requestData = {
+      email: email,
+      name: name,
+      identityNumber: identityNumber,
+      phoneNumber: phone,
+      password: password,
+    };
+
+    try {
+      const response = await axiosService.post(
+        customerRegisterUrl,
+        requestData
+      );
+
+      console.log(response);
+
+      if (response.status === 200) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onSignIn = () => {
-    // Navigate to login
-    // navigation.navigate("login");
+    router.push("/login");
   };
 
   return (
@@ -87,6 +119,17 @@ export default function RegisterPage() {
                 onChangeText={setEmail}
                 autoCapitalize="none"
                 keyboardType="email-address"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Identity Number</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="12345678901"
+                value={identityNumber}
+                onChangeText={setIdentityNumber}
+                autoCapitalize="words"
+                keyboardType="numeric"
               />
             </View>
             <View style={styles.inputContainer}>
