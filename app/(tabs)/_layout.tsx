@@ -9,6 +9,9 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -48,7 +51,13 @@ export default function TabLayout() {
           title: "Transactions",
           tabBarIcon: ({ color }) => (
             // <Icon name="credit-card" size={24} color="black" />
-            <AntDesign name="creditcard" size={24} color="black" />
+            // <AntDesign name="creditcard" size={24} color="black" />
+            // <MaterialCommunityIcons
+            //   name="battery-charging-90"
+            //   color="#000"
+            //   size={24}
+            // />
+            <AntDesign name="barschart" color="#000" size={24} />
           ),
         }}
       />
@@ -59,7 +68,8 @@ export default function TabLayout() {
           title: "Scan",
           tabBarIcon: ({ color }) => (
             // <Icon name="scan" size={24} color="black" />
-            <AntDesign name="scan1" size={24} color="black" />
+            // <AntDesign name="scan1" size={24} color="black" />
+            <FontAwesome name="bolt" color="#000" size={24} />
           ),
         }}
       />
@@ -70,7 +80,9 @@ export default function TabLayout() {
           title: "Vehicle",
           tabBarIcon: ({ color }) => (
             // <Icon name="car-electric" size={24} color="black" />
-            <AntDesign name="car" size={24} color="black" />
+            // <AntDesign name="car" size={24} color="black" />
+            // <Ionicons name="car-sport-sharp" color="#000" size={24} />
+            <Ionicons name="car-sport-outline" color="#000" size={24} />
           ),
         }}
       />
@@ -81,7 +93,8 @@ export default function TabLayout() {
           title: "Profile",
           tabBarIcon: ({ color }) => (
             // <Icon name="account" size={24} color="black" />
-            <AntDesign name="user" size={24} color="black" />
+            // <AntDesign name="user" size={24} color="black" />
+            <AntDesign name="user" color="#000" size={24} />
           ),
         }}
       />
