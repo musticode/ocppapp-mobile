@@ -73,7 +73,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     } else {
       // Navigate to notifications or show notification modal
       console.log("Notifications pressed");
-      router.push("/components/Notifications");
     }
   };
 
@@ -84,11 +83,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       <View style={styles.leftSection}>
         {showBackButton ? (
           <TouchableOpacity style={styles.headerIcon} onPress={handleBackPress}>
-            <Icon
-              name="arrow-left"
-              size={24}
-              color={Colors[colorScheme ?? "light"].text}
-            />
+            <Icon name="arrow-left" size={24} color={Colors[theme].text} />
           </TouchableOpacity>
         ) : leftIconComponent ? (
           leftIconComponent
@@ -97,7 +92,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <IconSymbol
               name={leftIconName}
               size={26}
-              color={Colors[colorScheme ?? "light"].text}
+              color={Colors[theme].text}
             />
           </TouchableOpacity>
         ) : (
@@ -106,21 +101,11 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       </View>
 
       <View style={styles.centerSection}>
-        <Text
-          style={[
-            styles.headerTitle,
-            { color: Colors[colorScheme ?? "light"].text },
-          ]}
-        >
+        <Text style={[styles.headerTitle, { color: Colors[theme].text }]}>
           {title}
         </Text>
         {subtitle && (
-          <Text
-            style={[
-              styles.headerSubtitle,
-              { color: Colors[colorScheme ?? "light"].text },
-            ]}
-          >
+          <Text style={[styles.headerSubtitle, { color: Colors[theme].text }]}>
             {subtitle}
           </Text>
         )}
@@ -132,11 +117,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             style={styles.headerIcon}
             onPress={handleNotificationPress}
           >
-            <Icon
-              name="bell-outline"
-              size={24}
-              color={Colors[colorScheme ?? "light"].text}
-            />
+            <Icon name="bell-outline" size={24} color={Colors[theme].text} />
           </TouchableOpacity>
         )}
 
@@ -146,11 +127,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             onPress={handleProfilePress}
           >
             <View style={styles.profileAvatar}>
-              <Icon
-                name="account"
-                size={20}
-                color={Colors[colorScheme ?? "light"].background}
-              />
+              <Icon name="account" size={20} color={Colors[theme].background} />
             </View>
           </TouchableOpacity>
         )}
@@ -162,7 +139,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <IconSymbol
               name={rightIconName}
               size={24}
-              color={Colors[colorScheme ?? "light"].text}
+              color={Colors[theme].text}
             />
           </TouchableOpacity>
         ) : (
@@ -178,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: 50, // Account for status bar
+    paddingTop: 20, // Account for status bar
     paddingBottom: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,

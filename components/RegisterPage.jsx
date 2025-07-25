@@ -15,6 +15,7 @@ import { router } from "expo-router";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
   const [identityNumber, setIdentityNumber] = useState("");
@@ -24,13 +25,21 @@ export default function RegisterPage() {
   const [agree, setAgree] = useState(true);
 
   const onSignUp = async () => {
-    if (!name || !phone || !countryCode || !email || !password || !agree) {
+    if (
+      !name ||
+      !surname ||
+      !phone ||
+      !countryCode ||
+      !email ||
+      !password ||
+      !agree
+    ) {
       console.log("Please fill all fields");
       return;
     }
 
     // Add validation and registration logic here
-    console.log({ name, phone, countryCode, email, password, agree });
+    console.log({ name, surname, phone, countryCode, email, password, agree });
 
     const customerRegisterUrl = "/auth/customerRegister";
 
@@ -38,6 +47,7 @@ export default function RegisterPage() {
       email: email,
       name: name,
       identityNumber: identityNumber,
+      surname: surname,
       phoneNumber: phone,
       password: password,
     };
@@ -50,7 +60,7 @@ export default function RegisterPage() {
 
       console.log(response);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         router.push("/");
       }
     } catch (error) {
@@ -85,9 +95,19 @@ export default function RegisterPage() {
               <Text style={styles.inputLabel}>Name</Text>
               <TextInput
                 style={styles.input}
-                placeholder="John Doe"
+                placeholder="John"
                 value={name}
                 onChangeText={setName}
+                autoCapitalize="words"
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Surname</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Doe"
+                value={surname}
+                onChangeText={setSurname}
                 autoCapitalize="words"
               />
             </View>

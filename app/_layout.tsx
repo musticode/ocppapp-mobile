@@ -11,6 +11,8 @@ import "react-native-reanimated";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -28,46 +30,51 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "light" ? DefaultTheme : DarkTheme}>
-      <Stack>
-        {isLoggedIn ? (
-          <>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="landing" options={{ headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="register" options={{ headerShown: false }} />
-            <Stack.Screen name="payments" options={{ headerShown: false }} />
-            <Stack.Screen name="helpcenter" options={{ headerShown: false }} />
+    <Provider store={store}>
+      <ThemeProvider value={colorScheme === "light" ? DefaultTheme : DarkTheme}>
+        <Stack>
+          {isLoggedIn ? (
+            <>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="landing" options={{ headerShown: false }} />
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="register" options={{ headerShown: false }} />
+              <Stack.Screen name="payments" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="helpcenter"
+                options={{ headerShown: false }}
+              />
 
-            <Stack.Screen
-              name="passwordmanager"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="privacypolicy"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="myvehicle" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="personalinfo"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="personalinfo"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="activesession"
-              options={{ headerShown: false }}
-            />
-          </>
-        )}
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+              <Stack.Screen
+                name="passwordmanager"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="privacypolicy"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="myvehicle" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="personalinfo"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="personalinfo"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="activesession"
+                options={{ headerShown: false }}
+              />
+            </>
+          )}
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </Provider>
   );
 }

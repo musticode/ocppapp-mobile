@@ -9,12 +9,26 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import {
+  selectUserEmail,
+  selectUserToken,
+  selectUserPhone,
+} from "../store/reducers/userSlice";
+import { useEffect } from "react";
 
 export default function PersonalInfo() {
   const navigation = useNavigation();
+  const userEmail = useSelector(selectUserEmail);
+  const userPhone = useSelector(selectUserPhone);
   const [name, setName] = useState("John Doe");
-  const [phone, setPhone] = useState("123 *** *** 545");
-  const [email, setEmail] = useState("example@gmail.com");
+  const [phone, setPhone] = useState(userPhone);
+  const [email, setEmail] = useState(userEmail);
+
+  useEffect(() => {
+    setEmail(userEmail);
+    setPhone(userPhone);
+  }, [userEmail, userPhone]);
 
   return (
     <View style={styles.screen}>

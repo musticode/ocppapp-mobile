@@ -3,36 +3,91 @@ import {
   Text,
   StyleSheet,
   TextInput,
+  Modal,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import axiosService from "@/service/axiosService";
 
-export default function PasswordManager() {
-  const navigation = useNavigation();
+interface CardInputProps {
+  label: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function AddCardModal({
+  label,
+  placeholder,
+  value,
+  onChangeText,
+  open,
+  onClose,
+}: CardInputProps) {
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [cvv, setCvv] = useState("");
+  const [cardholderName, setCardholderName] = useState("");
+
+  const handleAddCard = async () => {
+    console.log("Add Card", cardNumber, expiryDate, cvv, cardholderName);
+
+    const payload = {
+      cardNumber,
+      expiryDate,
+      cvv,
+      cardholderName,
+    };
+
+    try {
+      const response = await axiosService.post(
+        "/payments/createPaymentMethod",
+        payload
+      );
+      console.log("Response", response);
+    } catch (error) {
+      console.error("Error adding card", error);
+    }
+  };
+
   return (
-    <View style={styles.screen}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Password Manager</Text>
-        <Text style={styles.subtitle}>Manage your passwords here.</Text>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>New password</Text>
-          <TextInput style={styles.input} />
+    <Modal
+      visible={open}
+      onRequestClose={onClose}
+      transparent={false}
+      animationType="slide"
+    >
+      <View style={styles.screen}>
+        <View style={styles.card}>
+          <Text style={styles.title}>Payment Methods</Text>
+          <Text style={styles.subtitle}>Manage your payment methods here.</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Card Number</Text>
+            <TextInput style={styles.input} />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Expiry Date</Text>
+            <TextInput style={styles.input} />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>CVV</Text>
+            <TextInput style={styles.input} />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Cardholder Name</Text>
+            <TextInput style={styles.input} />
+          </View>
+          <TouchableOpacity style={styles.signInButton} onPress={onClose}>
+            <Text style={styles.signInButtonText}>Add Card</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Confirm Password</Text>
-          <TextInput style={styles.input} />
-        </View>
-        <TouchableOpacity style={styles.signInButton}>
-          <Text style={styles.signInButtonText}>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.cancelButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.cancelButtonText}>Cancel</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </Modal>
   );
 }
 
@@ -125,23 +180,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  cancelButton: {
-    width: "100%",
-    height: 48,
-    backgroundColor: "white",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 18,
-  },
-  cancelButtonText: {
-    color: "#000",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
   dividerRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -191,5 +229,20 @@ const styles = StyleSheet.create({
     color: "#1ec28b",
     fontWeight: "bold",
     fontSize: 15,
+  },
+  cancelButton: {
+    width: "100%",
+    height: 48,
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    color: "#222",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

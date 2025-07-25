@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,26 +12,53 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import axiosService from "../service/axiosService";
 import { router } from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setUserId,
+  setUserIdTagInfo,
+  setUserToken,
+  setUserEmail,
+  setUserPhone,
+  setUserRole,
+  selectUserEmail,
+  selectUserToken,
+} from "../store/reducers/userSlice";
 
 export default function LoginPage() {
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+  const userEmail = useSelector(selectUserEmail);
+  const userToken = useSelector(selectUserToken);
+
+  // Monitor Redux state changes
+  useEffect(() => {
+    console.log("Redux state updated - Email:", userEmail);
+    console.log("Redux state updated - Token:", userToken);
+  }, [userEmail, userToken]);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const storeLoginData = async (value) => {
     try {
-      await AsyncStorage.setItem("loginData", value);
+      await AsyncStorage.setItem("loginData", JSON.stringify(value));
     } catch (e) {
-      console.log(e);
+      console.log("Error storing login data:", e);
     }
   };
 
   const loginWithEmail = async (email, password) => {
     if (!email || !password) {
-      console.log("Please enter your email and password");
+      setError("Please enter your email and password");
       return;
     }
+
+    setIsLoading(true);
+    setError("");
 
     const requestData = {
       mail: email,
@@ -53,15 +80,54 @@ export default function LoginPage() {
         requestData
       );
 
-      console.log(response);
+      console.log("Login response:", response);
 
-      if (response.status === 200) {
-        storeLoginData(response.data);
+      if (response.status === 200 && response.data) {
+        // Store login data
+        await storeLoginData(response.data);
         await AsyncStorage.setItem("token", response.data.token);
+
+        // Dispatch user data to Redux store
+        if (response.data.id) {
+          dispatch(setUserId(response.data.id));
+        }
+        if (response.data.userIdTagInfo) {
+          dispatch(setUserIdTagInfo(response.data.userIdTagInfo));
+        }
+        if (response.data.token) {
+          dispatch(setUserToken(response.data.token));
+        }
+        if (response.data.email) {
+          dispatch(setUserEmail(response.data.email));
+        }
+        if (response.data.phoneNumber) {
+          dispatch(setUserPhone(response.data.phoneNumber));
+        }
+        if (response.data.role) {
+          dispatch(setUserRole(response.data.role));
+        }
+
+        console.log("User email stored:", response.data.email);
+        console.log("User token stored:", response.data.token);
+
+        // Verify Redux state after dispatch
+        console.log("Redux state - Email:", response.data.email);
+        console.log("Redux state - Token:", response.data.token);
+
+        // Navigate to home
         router.push("/");
+      } else {
+        setError("Invalid response from server");
       }
     } catch (error) {
-      console.log(error);
+      console.log("Login error:", error);
+      if (error.response) {
+        setError(error.response.data?.message || "Login failed");
+      } else {
+        setError("Network error. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,6 +147,13 @@ export default function LoginPage() {
         <Text style={styles.subtitle}>
           Hi! Welcome back, you&apos;ve been missed
         </Text>
+
+        {error ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        ) : null}
+
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
@@ -118,10 +191,16 @@ export default function LoginPage() {
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          style={styles.signInButton}
+          style={[
+            styles.signInButton,
+            isLoading && styles.signInButtonDisabled,
+          ]}
           onPress={onLogginButtonPress}
+          disabled={isLoading}
         >
-          <Text style={styles.signInButtonText}>Sign In</Text>
+          <Text style={styles.signInButtonText}>
+            {isLoading ? "Signing In..." : "Sign In"}
+          </Text>
         </TouchableOpacity>
         <View style={styles.dividerRow}>
           <View style={styles.divider} />
@@ -184,6 +263,20 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: "center",
   },
+  errorContainer: {
+    width: "100%",
+    backgroundColor: "#ffebee",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#ffcdd2",
+  },
+  errorText: {
+    color: "#c62828",
+    fontSize: 14,
+    textAlign: "center",
+  },
   inputContainer: {
     width: "100%",
     marginBottom: 12,
@@ -233,6 +326,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
     marginBottom: 18,
+  },
+  signInButtonDisabled: {
+    backgroundColor: "#cccccc",
   },
   signInButtonText: {
     color: "#fff",
