@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -9,17 +9,73 @@ import {
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Svg, { Circle } from "react-native-svg";
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import axiosService from "../service/axiosService";
+import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
 const CIRCLE_SIZE = width * 0.6;
 const STROKE_WIDTH = 12;
 const RADIUS = (CIRCLE_SIZE - STROKE_WIDTH) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
-const PERCENT = 35;
+const PERCENT = 35; // state of charge information
 const PROGRESS = (CIRCUMFERENCE * (100 - PERCENT)) / 100;
+const KW = 72;
+const CHARGING_TIME = "00:20:45";
+const AMOUNT = 20.24;
+let total = 0;
 
 export default function ActiveSession() {
+  const [percent, setPercent] = useState(PERCENT);
+  const [kw, setKw] = useState(KW);
+  const [chargingTime, setChargingTime] = useState(CHARGING_TIME);
+  const [amount, setAmount] = useState(AMOUNT);
+  const [totalCost, setTotalCost] = useState(total);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    fetchChargingMeterValues();
+  }, []);
+
+  const fetchChargingMeterValues = async () => {
+    try {
+      const response = await axiosService.post(
+        "/meter-values/fetchChargingMeterValues",
+        {
+          chargingMeterId: 1,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleStopCharging = async () => {
+    const remoteStopTransactionRequestBody = {
+      transactionId: "1234567890",
+      transactionType: "CHARGING",
+      transactionStatus: "STOPPED",
+      transactionAmount: 100,
+      transactionDate: "2021-01-01",
+      transactionTime: "10:00:00",
+      transactionLocation: "New York",
+    };
+
+    try {
+      // todo : will be implemented as backend controller
+      const response = await axiosService.post(
+        "/trigger-message/remoteStopTransaction",
+        remoteStopTransactionRequestBody
+      );
+
+      if (response.status === 200) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+      router.push("/");
+    }
+  };
 
   return (
     <View style={styles.screen}>
@@ -66,30 +122,34 @@ export default function ActiveSession() {
             color="#fbbf24"
             style={{ marginBottom: 2 }}
           />
-          <Text style={styles.percentText}>35%</Text>
-          <Text style={styles.kwText}>72 kw</Text>
+          <Text style={styles.percentText}>{percent}%</Text>
+          <Text style={styles.kwText}>{kw} kw</Text>
         </View>
       </View>
 
       {/* Usage Card */}
       <View style={styles.usageCard}>
         <View style={styles.usageCol}>
-          <Text style={styles.usageValue}>00:20:45</Text>
+          <Text style={styles.usageValue}>{chargingTime}</Text>
           <Text style={styles.usageLabel}>Charging Time</Text>
         </View>
         <View style={styles.usageCol}>
-          <Text style={styles.usageValue}>$20.24</Text>
+          <Text style={styles.usageValue}>{amount}</Text>
           <Text style={styles.usageLabel}>kWh (Amount)</Text>
         </View>
         <View style={styles.usageCol}>
-          <Text style={styles.usageValue}>$32.00</Text>
+          <Text style={styles.usageValue}>$ {totalCost.toFixed(2)}</Text>
           <Text style={styles.usageLabel}>Total Cost</Text>
         </View>
       </View>
 
       {/* Slide to Stop Charging Button */}
-      <TouchableOpacity style={styles.slideBtn} activeOpacity={0.8}>
-        <Text style={styles.slideBtnText}>Slide To Stop Charging</Text>
+      <TouchableOpacity
+        style={styles.slideBtn}
+        activeOpacity={0.8}
+        onPress={() => handleStopCharging()}
+      >
+        <Text style={styles.slideBtnText}>Stop Charging</Text>
         <View style={styles.slideArrow}>
           <Ionicons name="arrow-forward" size={22} color="#22c55e" />
         </View>
@@ -101,6 +161,7 @@ export default function ActiveSession() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    // alignItems: "center", // centers all content in the screen
     backgroundColor: "#f9fafb",
     paddingTop: 40,
     paddingHorizontal: 18,
@@ -128,7 +189,7 @@ const styles = StyleSheet.create({
     marginVertical: 18,
   },
   progressTextContainer: {
-    position: "absolute",
+    position: "relative", // 'absolute' is used to position the text inside the circle
     top: 0,
     left: 0,
     width: CIRCLE_SIZE,
@@ -137,7 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   percentText: {
-    fontSize: 38,
+    fontSize: 40,
     fontWeight: "bold",
     color: "#22c55e",
     marginBottom: 2,

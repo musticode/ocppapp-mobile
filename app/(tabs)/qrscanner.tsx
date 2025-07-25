@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import {
@@ -7,12 +7,48 @@ import {
   CameraView,
   useCameraPermissions,
 } from "expo-camera";
+import axiosService from "@/service/axiosService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
+import { selectUserIdTagInfo } from "@/store/reducers/userSlice";
 
 export default function QRScanner() {
   const router = useRouter();
+  const userIdTagInfo = useSelector(selectUserIdTagInfo);
   const [scanning, setScanning] = useState(true);
+  const [scanned, setScanned] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const [scannedData, setScannedData] = useState<string | null>(null);
+  const [chargeBoxId, setChargeBoxId] = useState<string | null>(null);
+
+  const sendRemoteStartTransactionRequest = async (
+    chargeBoxId: string,
+    userIdTagInfo: string | null
+  ) => {
+    console.log(
+      "Sending remote start transaction request to charge box:",
+      chargeBoxId
+    );
+    console.log("User ID tag info:", userIdTagInfo);
+    const response = await axiosService.post(
+      "/trigger-message/remoteStartTransaction",
+      {
+        chargeBoxId,
+        userIdTagInfo,
+      }
+    );
+    console.log("Response status:", response.status);
+    console.log("Response data:", response.data);
+    console.log("Response message:", response.data.message);
+    console.log("Response currentTime:", response.data.currentTime);
+    if (response.status === 200) {
+      router.push("/activesession");
+    } else {
+      // Alert.alert("Error", "Failed to send remote start transaction request");
+      console.log("Failed to send remote start transaction request");
+      router.push("/");
+    }
+  };
 
   if (!permission) {
     return <View />;
@@ -32,10 +68,34 @@ export default function QRScanner() {
     );
   }
 
-  const handleBarcodeScanned = (scanningResult: BarcodeScanningResult) => {
+  const handleBarcodeScanned = async (
+    scanningResult: BarcodeScanningResult
+  ) => {
     console.log("Barcode scanned:", scanningResult.data);
     setScanning(false);
+    setScanned(true);
     setScannedData(scanningResult.data);
+    setChargeBoxId(scanningResult.data);
+
+    // const chargeBoxId = scanningResult.data;
+    console.log("Charge box ID:", chargeBoxId);
+    console.log("User ID tag info:", userIdTagInfo);
+
+    if (chargeBoxId && userIdTagInfo && scanned === true) {
+      // sendRemoteStartTransactionRequest(chargeBoxId, userIdTagInfo);
+    } else {
+      // Alert.alert("Error", "Invalid charge box ID");
+      console.log("Invalid charge box ID");
+    }
+  };
+
+  const onPressRequestStartTransaction = () => {
+    console.log("Request start transaction");
+    if (chargeBoxId && userIdTagInfo) {
+      sendRemoteStartTransactionRequest(chargeBoxId, userIdTagInfo);
+    } else {
+      console.log("Invalid charge box ID or user ID tag info");
+    }
   };
 
   return (
@@ -59,6 +119,9 @@ export default function QRScanner() {
               style={styles.camera}
               // Add barcode scanning logic as needed
               onBarcodeScanned={handleBarcodeScanned}
+              barcodeScannerSettings={{
+                barcodeTypes: ["qr"],
+              }}
             />
             {/* Green corners */}
             <View style={[styles.corner, styles.cornerTL]} />
@@ -88,8 +151,11 @@ export default function QRScanner() {
           </TouchableOpacity>
         </View>
         {/* Scan button */}
-        <TouchableOpacity style={styles.scanBtn}>
-          <Text style={styles.scanBtnText}>Scan QR Code</Text>
+        <TouchableOpacity
+          style={styles.scanBtn}
+          onPress={() => onPressRequestStartTransaction()}
+        >
+          <Text style={styles.scanBtnText}>Request Start Transaction</Text>
         </TouchableOpacity>
       </View>
     </View>
