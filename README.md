@@ -1,4 +1,16 @@
-# Welcome to your Expo app 👋
+# OCPP Mobile application
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Application start:
+
+```bash
+yarn start
+```
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
