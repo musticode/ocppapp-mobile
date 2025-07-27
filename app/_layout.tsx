@@ -70,6 +70,10 @@ export default function RootLayout() {
                 name="activesession"
                 options={{ headerShown: false }}
               />
+              <Stack.Screen
+                name="notification"
+                options={{ headerShown: false }}
+              />
             </>
           )}
         </Stack>

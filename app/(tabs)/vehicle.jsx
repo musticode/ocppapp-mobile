@@ -17,6 +17,7 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { BatteryStatusCard } from "@/components/BatteryStatusCard";
 import { VehicleInfoCard } from "@/components/VehicleInfoCard";
+import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
@@ -76,6 +77,13 @@ export default function Vehicle() {
       <ParallaxScrollView
         headerBackgroundColor={{ light: "#F8F9FB", dark: "#121212" }}
       >
+        <AppHeader
+          title="My Vehicle"
+          showBackButton={true}
+          showProfile={true}
+          onLeftPress={() => router.back()}
+        />
+
         {/* Vehicle Header */}
         <View style={styles.vehicleHeader}>
           <Image source={vehicleData.avatar} style={styles.vehicleImage} />

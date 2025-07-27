@@ -1,25 +1,13 @@
-import { Image } from "expo-image";
-import {
-  Platform,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Dimensions,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, View, Text, Dimensions } from "react-native";
 
 import { AppHeader } from "@/components/AppHeader";
-import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { TransactionDetails } from "@/components/TransactionDetails";
 import TransactionCard from "@/components/TransactionCard";
 import VehicleCard from "@/components/VehicleCard";
 import UserInfoCard from "@/components/UserInfoCard";
+import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
@@ -94,154 +82,16 @@ export default function HomeScreen() {
           </View>
         }
       >
-        {/* User Info Card */}
-        {/* <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
-          <View style={styles.userCardHeader}>
-            <View style={styles.userAvatar}>
-              <Text style={styles.avatarText}>{mockUser.avatar}</Text>
-            </View>
-            <View style={styles.userInfo}>
-              <ThemedText type="subtitle" style={styles.userName}>
-                {mockUser.name}
-              </ThemedText>
-              <ThemedText style={[styles.userEmail, { color: colors.icon }]}>
-                {mockUser.email}
-              </ThemedText>
-              <View style={styles.membershipBadge}>
-                <Text style={styles.membershipText}>
-                  {mockUser.membershipLevel}
-                </Text>
-              </View>
-            </View>
-            <TouchableOpacity style={styles.editButton}>
-              <Ionicons name="pencil" size={16} color={colors.icon} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.userStats}>
-            <View style={styles.statItem}>
-              <Text style={[styles.statValue, { color: colors.tint }]}>
-                {mockUser.totalCharges}
-              </Text>
-              <Text style={[styles.statLabel, { color: colors.icon }]}>
-                Total Charges
-              </Text>
-            </View>
-            <View style={styles.statDivider} />
-            <View style={styles.statItem}>
-              <Text style={[styles.statValue, { color: colors.tint }]}>
-                ${mockUser.totalSavings}
-              </Text>
-              <Text style={[styles.statLabel, { color: colors.icon }]}>
-                Total Savings
-              </Text>
-            </View>
-          </View>
-        </ThemedView> */}
+        <AppHeader
+          title="Home"
+          showBackButton={false}
+          showProfile={true}
+          showNotifications={true}
+          onNotificationPress={() => router.push("/notification")}
+        />
         <UserInfoCard user={mockUser} />
-
         <VehicleCard vehicle={mockCar} />
-
-        {/* Car Status Card */}
-        {/* <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
-          <View style={styles.carCardHeader}>
-            <View style={styles.carIcon}>
-              <Text style={styles.carEmoji}>🚗</Text>
-            </View>
-            <View style={styles.carInfo}>
-              <ThemedText type="subtitle" style={styles.carModel}>
-                {mockCar.model}
-              </ThemedText>
-              <ThemedText style={[styles.carStatus, { color: colors.icon }]}>
-                {mockCar.isCharging ? "Charging..." : "Ready to charge"}
-              </ThemedText>
-            </View>
-            <View style={styles.batteryContainer}>
-              <View style={styles.batteryOutline}>
-                <View
-                  style={[
-                    styles.batteryLevel,
-                    {
-                      width: `${mockCar.batteryLevel}%`,
-                      backgroundColor: getBatteryColor(mockCar.batteryLevel),
-                    },
-                  ]}
-                />
-              </View>
-              <Text style={[styles.batteryText, { color: colors.text }]}>
-                {mockCar.batteryLevel}%
-              </Text>
-            </View>
-          </View>
-          <View style={styles.carDetails}>
-            <View style={styles.carDetailItem}>
-              <Ionicons name="speedometer" size={16} color={colors.icon} />
-              <Text style={[styles.carDetailText, { color: colors.text }]}>
-                {mockCar.range} mi range
-              </Text>
-            </View>
-            <View style={styles.carDetailItem}>
-              <Ionicons name="time" size={16} color={colors.icon} />
-              <Text style={[styles.carDetailText, { color: colors.text }]}>
-                Last charged {mockCar.lastCharged}
-              </Text>
-            </View>
-          </View>
-        </ThemedView> */}
-
         <TransactionCard transaction={mockLastTransaction} onClose={() => {}} />
-
-        {/* Quick Actions */}
-        {/* <ThemedView style={[styles.card, { borderColor: colors.icon + "20" }]}>
-          <ThemedText type="subtitle" style={styles.quickActionsTitle}>
-            Quick Actions
-          </ThemedText>
-          <View style={styles.quickActionsGrid}>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                { backgroundColor: colors.tint + "20" },
-              ]}
-            >
-              <Ionicons name="search" size={24} color={colors.tint} />
-              <Text style={[styles.actionText, { color: colors.text }]}>
-                Find Station
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                { backgroundColor: colors.tint + "20" },
-              ]}
-            >
-              <Ionicons name="card" size={24} color={colors.tint} />
-              <Text style={[styles.actionText, { color: colors.text }]}>
-                Payment
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                { backgroundColor: colors.tint + "20" },
-              ]}
-            >
-              <Ionicons name="settings" size={24} color={colors.tint} />
-              <Text style={[styles.actionText, { color: colors.text }]}>
-                Settings
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                { backgroundColor: colors.tint + "20" },
-              ]}
-            >
-              <Ionicons name="help-circle" size={24} color={colors.tint} />
-              <Text style={[styles.actionText, { color: colors.text }]}>
-                Help
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ThemedView> */}
       </ParallaxScrollView>
     </View>
   );
