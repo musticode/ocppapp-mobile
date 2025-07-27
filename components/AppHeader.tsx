@@ -70,7 +70,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const handleNotificationPress = () => {
     if (onNotificationPress) {
       onNotificationPress();
-      router.push("/notification");
     } else {
       // Navigate to notifications or show notification modal
       console.log("Notifications pressed");
@@ -78,89 +77,80 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   };
 
   return (
-    <View
-      style={[styles.headerBar, { backgroundColor: Colors[theme].background }]}
-    >
-      <View style={styles.leftSection}>
-        {showBackButton ? (
-          <TouchableOpacity style={styles.headerIcon} onPress={handleBackPress}>
-            <Icon name="arrow-left" size={24} color={Colors[theme].text} />
-          </TouchableOpacity>
-        ) : leftIconComponent ? (
-          leftIconComponent
-        ) : leftIconName ? (
-          <TouchableOpacity style={styles.headerIcon} onPress={onLeftPress}>
-            <IconSymbol
-              name={leftIconName}
-              size={26}
-              color={Colors[theme].text}
-            />
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.headerIcon} />
-        )}
+    <View style={styles.headerContainer}>
+      <View style={styles.headerBar}>
+        <View style={styles.leftSection}>
+          {showBackButton ? (
+            <TouchableOpacity
+              style={styles.headerIcon}
+              onPress={handleBackPress}
+            >
+              <Icon name="arrow-left" size={24} color="#B0B0B0" />
+            </TouchableOpacity>
+          ) : leftIconComponent ? (
+            leftIconComponent
+          ) : leftIconName ? (
+            <TouchableOpacity style={styles.headerIcon} onPress={onLeftPress}>
+              <IconSymbol name={leftIconName} size={26} color="#B0B0B0" />
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.headerIcon} />
+          )}
+        </View>
+
+        <View style={styles.centerSection}>
+          <Text style={styles.headerTitle}>{title}</Text>
+          {subtitle && <Text style={styles.headerSubtitle}>{subtitle}</Text>}
+        </View>
+
+        <View style={styles.rightSection}>
+          {showNotifications && (
+            <TouchableOpacity
+              style={styles.headerIcon}
+              onPress={handleNotificationPress}
+            >
+              <Icon name="bell-outline" size={24} color="#B0B0B0" />
+            </TouchableOpacity>
+          )}
+
+          {showProfile && (
+            <TouchableOpacity
+              style={styles.profileButton}
+              onPress={handleProfilePress}
+            >
+              <View style={styles.profileAvatar}>
+                <Icon name="account" size={20} color="#fff" />
+              </View>
+            </TouchableOpacity>
+          )}
+
+          {rightIconComponent ? (
+            rightIconComponent
+          ) : rightIconName ? (
+            <TouchableOpacity style={styles.headerIcon} onPress={onRightPress}>
+              <IconSymbol name={rightIconName} size={24} color="#B0B0B0" />
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.headerIcon} />
+          )}
+        </View>
       </View>
-
-      <View style={styles.centerSection}>
-        <Text style={[styles.headerTitle, { color: Colors[theme].text }]}>
-          {title}
-        </Text>
-        {subtitle && (
-          <Text style={[styles.headerSubtitle, { color: Colors[theme].text }]}>
-            {subtitle}
-          </Text>
-        )}
-      </View>
-
-      <View style={styles.rightSection}>
-        {showNotifications && (
-          <TouchableOpacity
-            style={styles.headerIcon}
-            onPress={handleNotificationPress}
-          >
-            <Icon name="bell-outline" size={24} color={Colors[theme].text} />
-          </TouchableOpacity>
-        )}
-
-        {showProfile && (
-          <TouchableOpacity
-            style={styles.profileButton}
-            onPress={handleProfilePress}
-          >
-            <View style={styles.profileAvatar}>
-              <Icon name="account" size={20} color={Colors[theme].background} />
-            </View>
-          </TouchableOpacity>
-        )}
-
-        {rightIconComponent ? (
-          rightIconComponent
-        ) : rightIconName ? (
-          <TouchableOpacity style={styles.headerIcon} onPress={onRightPress}>
-            <IconSymbol
-              name={rightIconName}
-              size={24}
-              color={Colors[theme].text}
-            />
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.headerIcon} />
-        )}
-      </View>
+      <View style={styles.separator} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    backgroundColor: "#2E6F40", // Dark blue background
+  },
   headerBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: 20, // Account for status bar
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
+    paddingTop: 40, // Account for status bar
+    paddingBottom: 10,
+    paddingHorizontal: 10,
   },
   leftSection: {
     flex: 1,
@@ -181,12 +171,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
+    color: "#FFFFFF", // Light gray text
+    fontFamily: "System",
   },
   headerSubtitle: {
     fontSize: 14,
     fontWeight: "400",
     textAlign: "center",
     marginTop: 2,
+    color: "#FFFFFF", // Light gray text
   },
   headerIcon: {
     width: 40,
@@ -200,6 +193,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: "center",
     justifyContent: "center",
+    paddingLeft: 40,
   },
   profileAvatar: {
     width: 32,
@@ -208,5 +202,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#0a7ea4",
     alignItems: "center",
     justifyContent: "center",
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#B0B0B0", // Light gray separator line
   },
 });

@@ -73,6 +73,13 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.screen}>
+      <AppHeader
+        title="Home"
+        showBackButton={false}
+        showProfile={true}
+        showNotifications={true}
+        onNotificationPress={() => router.push("/notification")}
+      />
       <ParallaxScrollView
         headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
         headerImage={
@@ -82,13 +89,6 @@ export default function HomeScreen() {
           </View>
         }
       >
-        <AppHeader
-          title="Home"
-          showBackButton={false}
-          showProfile={true}
-          showNotifications={true}
-          onNotificationPress={() => router.push("/notification")}
-        />
         <UserInfoCard user={mockUser} />
         <VehicleCard vehicle={mockCar} />
         <TransactionCard transaction={mockLastTransaction} onClose={() => {}} />
