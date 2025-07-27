@@ -20,10 +20,39 @@ export default function QRScanner() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scannedData, setScannedData] = useState<string | null>(null);
   const [chargeBoxId, setChargeBoxId] = useState<string | null>(null);
+  const [chargeBox, setChargeBox] = useState<any>(null);
+
+  const fetchChargeBox = async (chargeBoxIdentifier: string) => {
+    console.log("Fetching charge box:", chargeBoxIdentifier);
+    console.log(
+      "Fetching connector status for charge box:",
+      chargeBoxIdentifier
+    );
+
+    let identifier = chargeBoxIdentifier;
+
+    try {
+      const response = await axiosService.get(`/charge-box/cp`, {
+        params: {
+          identifier: chargeBoxIdentifier,
+        },
+      });
+
+      console.log("Charge box:", response.data);
+      if (response.status === 200) {
+        setChargeBox(response.data);
+      } else {
+        console.log("Failed to fetch charge box");
+      }
+    } catch (error) {
+      console.error("Error fetching charge box:", error);
+    }
+  };
 
   const sendRemoteStartTransactionRequest = async (
     chargeBoxId: string,
-    userIdTagInfo: string | null
+    userIdTagInfo: string | null,
+    connectorId: number
   ) => {
     console.log(
       "Sending remote start transaction request to charge box:",
@@ -35,16 +64,17 @@ export default function QRScanner() {
       {
         chargeBoxId,
         userIdTagInfo,
+        connectorId,
       }
     );
     console.log("Response status:", response.status);
     console.log("Response data:", response.data);
     console.log("Response message:", response.data.message);
     console.log("Response currentTime:", response.data.currentTime);
+
     if (response.status === 200) {
       router.push("/activesession");
     } else {
-      // Alert.alert("Error", "Failed to send remote start transaction request");
       console.log("Failed to send remote start transaction request");
       router.push("/");
     }
@@ -91,8 +121,29 @@ export default function QRScanner() {
 
   const onPressRequestStartTransaction = () => {
     console.log("Request start transaction");
+    fetchChargeBox("CPSIM_01");
+    if (scannedData) {
+      // fetchChargeBox(scannedData);
+      //todo: remove this
+      // fetchChargeBox("CP_SIM1");
+    }
+    // else {
+    //   console.log("Invalid charge box ID");
+    // }
     if (chargeBoxId && userIdTagInfo) {
-      sendRemoteStartTransactionRequest(chargeBoxId, userIdTagInfo);
+      const availableConnector = chargeBox?.connectors.find(
+        (connector: any) => connector.connectorStatus === "Available"
+      );
+      console.log("Available connector:", availableConnector);
+      if (availableConnector) {
+        sendRemoteStartTransactionRequest(
+          chargeBoxId,
+          userIdTagInfo,
+          availableConnector.id
+        );
+      } else {
+        console.log("No available connector");
+      }
     } else {
       console.log("Invalid charge box ID or user ID tag info");
     }

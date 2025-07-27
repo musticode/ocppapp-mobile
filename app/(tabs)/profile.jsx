@@ -10,6 +10,7 @@ import {
 import { Ionicons, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import LogoutModal from "@/components/LogoutModal";
 import { router } from "expo-router";
+import { AppHeader } from "@/components/AppHeader";
 
 export default function Profile() {
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
@@ -63,13 +64,20 @@ export default function Profile() {
   return (
     <View style={styles.screen}>
       {/* Header */}
-      <View style={styles.headerRow}>
+      {/* <View style={styles.headerRow}>
         <TouchableOpacity style={styles.headerBtn}>
           <Ionicons name="arrow-back" size={24} color="#222" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Account</Text>
         <View style={{ width: 38 }} />
-      </View>
+      </View> */}
+      <AppHeader
+        title="Account"
+        showBackButton={true}
+        showProfile={false}
+        onLeftPress={() => router.back()}
+      />
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}

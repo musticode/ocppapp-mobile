@@ -70,6 +70,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const handleNotificationPress = () => {
     if (onNotificationPress) {
       onNotificationPress();
+      router.push("/notification");
     } else {
       // Navigate to notifications or show notification modal
       console.log("Notifications pressed");
