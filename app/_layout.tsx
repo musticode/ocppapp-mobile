@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   DarkTheme,
   DefaultTheme,
@@ -9,7 +9,6 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
@@ -20,19 +19,24 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
-  // Replace this with your real authentication logic
-  const isLoggedIn =
-    typeof window !== "undefined" && AsyncStorage.getItem("token");
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
+  useEffect(() => {
+    const checkLogin = async () => {
+      const token = await AsyncStorage.getItem("token");
+      setIsLoggedIn(!!token);
+    };
+    checkLogin();
+  }, []);
+
+  if (!loaded || isLoggedIn === null) {
     return null;
   }
 
   return (
     <Provider store={store}>
       <ThemeProvider value={colorScheme === "light" ? DefaultTheme : DarkTheme}>
-        <Stack>
+        <Stack screenOptions={{ headerShown: false }}>
           {isLoggedIn ? (
             <>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
