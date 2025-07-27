@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { TransactionList } from "@/components/TransactionList";
 import { TransactionModal } from "@/components/TransactionModal";
+import { AppHeader } from "@/components/AppHeader";
+import { router } from "expo-router";
 
 const TABS = ["All", "Completed", "Cancelled"];
 
@@ -23,16 +25,14 @@ export default function Transactions() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.headerRow}>
-        <TouchableOpacity style={styles.headerBtn}>
-          <Ionicons name="arrow-back" size={24} color="#222" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Transactions</Text>
-        <TouchableOpacity style={styles.headerBtn}>
-          <Ionicons name="search" size={24} color="#222" />
-        </TouchableOpacity>
-      </View>
+      <AppHeader
+        title="Transactions"
+        showBackButton={true}
+        showProfile={true}
+        showNotifications={true}
+        onNotificationPress={() => router.push("/notification")}
+        onLeftPress={() => router.back()}
+      />
       {/* Tabs */}
       <View style={styles.tabRow}>
         {TABS.map((t) => (
