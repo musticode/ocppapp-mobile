@@ -15,6 +15,8 @@ import {
 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import AddCardModal from "./AddCardModal";
+import { AppHeader } from "./AppHeader";
+import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
@@ -201,8 +203,15 @@ export default function PaymentMethodList() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <AppHeader
+        title="Payments"
+        showBackButton={true}
+        showProfile={false}
+        onLeftPress={() => router.back()}
+      />
+
       {/* Header with Balance */}
-      <View style={styles.header}></View>
+
       {/* Main Credit Card Display */}
       {activeCard &&
         renderCard(paymentMethods.find((card) => card.id === activeCard)!)}
@@ -210,33 +219,6 @@ export default function PaymentMethodList() {
       <View style={styles.activeCardSection}>
         <Text style={styles.sectionTitle}>Payment Methods</Text>
         {renderCardList()}
-        {/* <View style={styles.cardSelection}>
-          {paymentMethods.map((card) => (
-            <TouchableOpacity
-              key={card.id}
-              style={[
-                styles.cardOption,
-                card.isActive && styles.cardOptionActive,
-              ]}
-              // onPress={() => setActiveCard(card.id)}
-              onPress={() => handleCardPress(card)}
-            >
-              <Text
-                style={[
-                  styles.cardOptionText,
-                  card.isActive && styles.cardOptionTextActive,
-                ]}
-              >
-                {card.type === "visa" ? "VISA" : "Mastercard"}
-              </Text>
-              {card.isActive && (
-                <View style={styles.activeIndicator}>
-                  <Ionicons name="checkmark" size={16} color="#fff" />
-                </View>
-              )}
-            </TouchableOpacity>
-          ))}
-        </View> */}
       </View>
       <View style={styles.addCardButtonContainer}>
         <TouchableOpacity style={styles.addCardButton} onPress={handleAddCard}>
