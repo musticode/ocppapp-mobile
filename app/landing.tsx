@@ -1,5 +1,5 @@
-import LandingPage from "../components/LandingPage";
+import { GetStarted } from "@/components/GetStarted";
 
 export default function LandingScreen() {
-  return <LandingPage />;
+  return <GetStarted />;
 }
