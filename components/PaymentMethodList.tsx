@@ -205,6 +205,7 @@ export default function PaymentMethodList() {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <AppHeader
         title="Payments"
+        subtitle="Payment Methods"
         showBackButton={true}
         showProfile={false}
         onLeftPress={() => router.back()}

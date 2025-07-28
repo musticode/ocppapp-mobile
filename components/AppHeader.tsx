@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+} from "react-native";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
@@ -29,11 +36,18 @@ interface AppHeaderProps {
   showNotifications?: boolean;
   onProfilePress?: () => void;
   onNotificationPress?: () => void;
+  onSearchPress?: () => void;
   subtitle?: string;
+  // New props for image support
+  backgroundImage?: any;
+  showAppLogo?: boolean;
+  appLogoSource?: any;
+  showSearchButton?: boolean;
+  showNotificationButton?: boolean;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
-  title = "My App",
+  title = "EV Charge",
   leftIconName,
   onLeftPress,
   rightIconName,
@@ -45,7 +59,13 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   showNotifications = false,
   onProfilePress,
   onNotificationPress,
+  onSearchPress,
   subtitle,
+  backgroundImage,
+  showAppLogo = true,
+  appLogoSource,
+  showSearchButton = false,
+  showNotificationButton = true,
 }) => {
   const colorScheme = useColorScheme();
   const router = useRouter();
@@ -76,65 +96,118 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     }
   };
 
+  const handleSearchPress = () => {
+    if (onSearchPress) {
+      onSearchPress();
+    } else {
+      console.log("Search pressed");
+    }
+  };
+
+  const HeaderContent = () => (
+    <View style={styles.headerBar}>
+      <View style={styles.leftSection}>
+        {showBackButton ? (
+          <TouchableOpacity style={styles.headerIcon} onPress={handleBackPress}>
+            <Icon name="arrow-left" size={24} color="#000000" />
+          </TouchableOpacity>
+        ) : showAppLogo ? (
+          <View style={styles.logoContainer}>
+            <View style={styles.appLogo}>
+              <Icon name="lightning-bolt" size={20} color="#FFFFFF" />
+            </View>
+            <Text style={styles.appTitle}>{title}</Text>
+          </View>
+        ) : leftIconComponent ? (
+          leftIconComponent
+        ) : leftIconName ? (
+          <TouchableOpacity style={styles.headerIcon} onPress={onLeftPress}>
+            <IconSymbol name={leftIconName} size={26} color="#000000" />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.headerIcon} />
+        )}
+      </View>
+
+      <View style={styles.centerSection}>
+        {!showAppLogo && (
+          <>
+            <Text style={styles.headerTitle}>{title}</Text>
+            {subtitle && <Text style={styles.headerSubtitle}>{subtitle}</Text>}
+          </>
+        )}
+      </View>
+
+      <View style={styles.rightSection}>
+        {showSearchButton && (
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleSearchPress}
+          >
+            <Icon name="magnify" size={20} color="#000000" />
+          </TouchableOpacity>
+        )}
+
+        {showNotificationButton && (
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={handleNotificationPress}
+          >
+            <Icon name="bell-outline" size={20} color="#000000" />
+          </TouchableOpacity>
+        )}
+
+        {showNotifications && !showNotificationButton && (
+          <TouchableOpacity
+            style={styles.headerIcon}
+            onPress={handleNotificationPress}
+          >
+            <Icon name="bell-outline" size={24} color="#000000" />
+          </TouchableOpacity>
+        )}
+
+        {showProfile && (
+          <TouchableOpacity
+            style={styles.profileButton}
+            onPress={handleProfilePress}
+          >
+            <View style={styles.profileAvatar}>
+              <Icon name="account" size={20} color="#fff" />
+            </View>
+          </TouchableOpacity>
+        )}
+
+        {rightIconComponent ? (
+          rightIconComponent
+        ) : rightIconName ? (
+          <TouchableOpacity style={styles.headerIcon} onPress={onRightPress}>
+            <IconSymbol name={rightIconName} size={24} color="#000000" />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.headerIcon} />
+        )}
+      </View>
+    </View>
+  );
+
+  if (backgroundImage) {
+    return (
+      <View style={styles.headerContainer}>
+        <ImageBackground
+          source={backgroundImage}
+          style={styles.headerBackground}
+          resizeMode="cover"
+        >
+          <HeaderContent />
+        </ImageBackground>
+        <View style={styles.separator} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.headerBar}>
-        <View style={styles.leftSection}>
-          {showBackButton ? (
-            <TouchableOpacity
-              style={styles.headerIcon}
-              onPress={handleBackPress}
-            >
-              <Icon name="arrow-left" size={24} color="#B0B0B0" />
-            </TouchableOpacity>
-          ) : leftIconComponent ? (
-            leftIconComponent
-          ) : leftIconName ? (
-            <TouchableOpacity style={styles.headerIcon} onPress={onLeftPress}>
-              <IconSymbol name={leftIconName} size={26} color="#B0B0B0" />
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.headerIcon} />
-          )}
-        </View>
-
-        <View style={styles.centerSection}>
-          <Text style={styles.headerTitle}>{title}</Text>
-          {subtitle && <Text style={styles.headerSubtitle}>{subtitle}</Text>}
-        </View>
-
-        <View style={styles.rightSection}>
-          {showNotifications && (
-            <TouchableOpacity
-              style={styles.headerIcon}
-              onPress={handleNotificationPress}
-            >
-              <Icon name="bell-outline" size={24} color="#B0B0B0" />
-            </TouchableOpacity>
-          )}
-
-          {showProfile && (
-            <TouchableOpacity
-              style={styles.profileButton}
-              onPress={handleProfilePress}
-            >
-              <View style={styles.profileAvatar}>
-                <Icon name="account" size={20} color="#fff" />
-              </View>
-            </TouchableOpacity>
-          )}
-
-          {rightIconComponent ? (
-            rightIconComponent
-          ) : rightIconName ? (
-            <TouchableOpacity style={styles.headerIcon} onPress={onRightPress}>
-              <IconSymbol name={rightIconName} size={24} color="#B0B0B0" />
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.headerIcon} />
-          )}
-        </View>
-      </View>
+      <HeaderContent />
       <View style={styles.separator} />
     </View>
   );
@@ -142,7 +215,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
 const styles = StyleSheet.create({
   headerContainer: {
-    backgroundColor: "#2E6F40", // Dark blue background
+    backgroundColor: "#FFFFFF", // White background to match the image
+  },
+  headerBackground: {
+    width: "100%",
   },
   headerBar: {
     flexDirection: "row",
@@ -150,7 +226,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingTop: 40, // Account for status bar
     paddingBottom: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
   },
   leftSection: {
     flex: 1,
@@ -167,11 +243,30 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 8,
   },
+  logoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  appLogo: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#4CAF50", // Green background to match the image
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  appTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#000000", // Black text to match the image
+    fontFamily: "System",
+  },
   headerTitle: {
     fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
-    color: "#FFFFFF", // Light gray text
+    color: "#000000", // Black text to match the image
     fontFamily: "System",
   },
   headerSubtitle: {
@@ -179,7 +274,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 2,
-    color: "#FFFFFF", // Light gray text
+    color: "#666666", // Dark gray subtitle
   },
   headerIcon: {
     width: 40,
@@ -187,6 +282,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
+  },
+  actionButton: {
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#000000",
+    backgroundColor: "#FFFFFF",
   },
   profileButton: {
     width: 40,
@@ -205,6 +310,6 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: "#B0B0B0", // Light gray separator line
+    backgroundColor: "#E0E0E0", // Light gray separator line
   },
 });
