@@ -52,7 +52,6 @@ export default function RootLayout() {
                 name="helpcenter"
                 options={{ headerShown: false }}
               />
-
               <Stack.Screen
                 name="passwordmanager"
                 options={{ headerShown: false }}
@@ -76,6 +75,10 @@ export default function RootLayout() {
               />
               <Stack.Screen
                 name="notification"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="startcharging"
                 options={{ headerShown: false }}
               />
             </>

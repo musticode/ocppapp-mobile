@@ -22,7 +22,7 @@ const { width } = Dimensions.get("window");
 
 interface PaymentMethod {
   id: string;
-  type: "visa" | "mastercard";
+  type: "visa" | "mastercard" | "amex";
   cardNumber: string;
   cardHolder: string;
   expires: string;
@@ -214,8 +214,9 @@ export default function PaymentMethodList() {
       {/* Header with Balance */}
 
       {/* Main Credit Card Display */}
-      {activeCard &&
-        renderCard(paymentMethods.find((card) => card.id === activeCard)!)}
+      {activeCard
+        ? renderCard(paymentMethods.find((card) => card.id === activeCard)!)
+        : renderCard(paymentMethods[0])}
       {/* Active Card Selection */}
       <View style={styles.activeCardSection}>
         <Text style={styles.sectionTitle}>Payment Methods</Text>
