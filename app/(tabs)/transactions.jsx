@@ -1,10 +1,13 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { TransactionList } from "@/components/TransactionList";
 import { TransactionModal } from "@/components/TransactionModal";
 import { AppHeader } from "@/components/AppHeader";
 import { router } from "expo-router";
+import axiosInstance from "../../service/axiosService";
+import { useSelector } from "react-redux";
+import { selectUserEmail } from "../../store/reducers/userSlice";
 
 const TABS = ["All", "Completed", "Cancelled"];
 
@@ -12,6 +15,8 @@ export default function Transactions() {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [tab, setTab] = useState("All");
+  const [transactions, setTransactions] = useState([]);
+  const userEmail = useSelector(selectUserEmail);
 
   const handleTransactionPress = (transaction) => {
     setSelectedTransaction(transaction);
@@ -22,6 +27,22 @@ export default function Transactions() {
     setModalVisible(false);
     setSelectedTransaction(null);
   };
+
+  const fetchUserTransactions = async () => {
+    console.log(userEmail);
+    try {
+      const response = await axiosInstance.get(
+        `/consumption/fetchUserConsumptions?userEmail=${userEmail}`
+      );
+      setTransactions(response.data);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserTransactions();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -49,7 +70,11 @@ export default function Transactions() {
         ))}
       </View>
       {/* Transaction List */}
-      <TransactionList onTransactionPress={handleTransactionPress} tab={tab} />
+      <TransactionList
+        onTransactionPress={handleTransactionPress}
+        tab={tab}
+        transactions={transactions}
+      />
       <TransactionModal
         visible={modalVisible}
         transaction={selectedTransaction}

@@ -15,7 +15,8 @@ const { width, height } = Dimensions.get("window");
 export const GetStarted = () => {
   return (
     <LinearGradient
-      colors={["#2c3e50", "#34495e", "#2c3e50"]}
+      //colors={["#2c3e50", "#34495e", "#2c3e50"]}
+      colors={["#299799", "#6BBF91", "#AABD66", "#C7BC52", "#FDBB2D"]}
       style={styles.container}
     >
       {/* Header with Logo */}

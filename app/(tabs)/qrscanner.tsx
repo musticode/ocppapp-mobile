@@ -11,10 +11,18 @@ import axiosService from "@/service/axiosService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
 import { selectUserIdTagInfo } from "@/store/reducers/userSlice";
+import {
+  setChargeBoxIdentifier,
+  setChargeBoxName,
+  setChargeBoxStatus,
+} from "@/store/reducers/chargeBoxSlice";
+import { setChargeBoxLocation } from "@/store/reducers/chargeBoxSlice";
+import { useDispatch } from "react-redux";
 
 export default function QRScanner() {
   const router = useRouter();
   const userIdTagInfo = useSelector(selectUserIdTagInfo);
+  const dispatch = useDispatch();
   const [scanning, setScanning] = useState(true);
   const [scanned, setScanned] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
@@ -119,28 +127,37 @@ export default function QRScanner() {
     }
   };
 
+  // todo : update this function
   const onPressRequestStartTransaction = () => {
     console.log("Request start transaction");
-    fetchChargeBox("CPSIM_01");
+
     if (scannedData) {
-      // fetchChargeBox(scannedData);
+      fetchChargeBox(scannedData);
+
       //todo: remove this
       // fetchChargeBox("CP_SIM1");
     }
-    // else {
-    //   console.log("Invalid charge box ID");
-    // }
+
     if (chargeBoxId && userIdTagInfo) {
       const availableConnector = chargeBox?.connectors.find(
         (connector: any) => connector.connectorStatus === "Available"
       );
       console.log("Available connector:", availableConnector);
       if (availableConnector) {
+        console.log("Sending remote start transaction request");
         sendRemoteStartTransactionRequest(
           chargeBoxId,
           userIdTagInfo,
           availableConnector.id
         );
+
+        console.log("Setting charge box identifier");
+        dispatch(setChargeBoxIdentifier(chargeBoxId));
+        dispatch(setChargeBoxName(chargeBox?.name));
+        dispatch(setChargeBoxStatus(chargeBox?.status));
+        dispatch(setChargeBoxLocation(chargeBox?.location));
+
+        router.push("/startcharging");
       } else {
         console.log("No available connector");
       }

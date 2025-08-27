@@ -12,6 +12,15 @@ Application start:
 yarn start
 ```
 
+## QR Code flow
+
+- scan chargebox QR code : scanned code CPSIM_01
+- send get chargebox information -> chargebox response with connector statuses
+- start charging modal opened with connector statuses
+- list connectors from opened list
+- user selects a connectors, conector tariffs are seen
+-
+
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Get started

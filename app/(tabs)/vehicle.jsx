@@ -264,14 +264,6 @@ export default function Vehicle() {
               </Text>
             </View>
           </View>
-          <View style={styles.favoriteStation}>
-            <Text style={[styles.favoriteLabel, { color: colors.icon }]}>
-              Favorite Station
-            </Text>
-            <Text style={[styles.favoriteValue, { color: colors.text }]}>
-              {vehicleData.chargingStats.favoriteStation}
-            </Text>
-          </View>
         </View>
 
         {/* Maintenance Status Card */}
