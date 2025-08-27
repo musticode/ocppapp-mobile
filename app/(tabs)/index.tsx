@@ -1,4 +1,10 @@
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 
 import { AppHeader } from "@/components/AppHeader";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
@@ -8,6 +14,7 @@ import TransactionCard from "@/components/TransactionCard";
 import VehicleCard from "@/components/VehicleCard";
 import UserInfoCard from "@/components/UserInfoCard";
 import { router } from "expo-router";
+import StartCharging from "@/app/startcharging";
 
 const { width } = Dimensions.get("window");
 
@@ -74,7 +81,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.screen}>
       <AppHeader
-        title="Home"
+        title="EV Charge"
         showBackButton={false}
         showProfile={true}
         showNotifications={true}
@@ -89,6 +96,11 @@ export default function HomeScreen() {
           </View>
         }
       >
+        <View style={{ flex: 1 }}>
+          <TouchableOpacity onPress={() => router.push("/startcharging")}>
+            <Text>Start Charging</Text>
+          </TouchableOpacity>
+        </View>
         <UserInfoCard user={mockUser} />
         <VehicleCard vehicle={mockCar} />
         <TransactionCard transaction={mockLastTransaction} onClose={() => {}} />
@@ -116,18 +128,6 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     marginTop: 4,
   },
-  // card: {
-  //   marginHorizontal: 16,
-  //   marginBottom: 16,
-  //   padding: 16,
-  //   borderRadius: 12,
-  //   borderWidth: 1,
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: 2 },
-  //   shadowOpacity: 0.1,
-  //   shadowRadius: 4,
-  //   elevation: 3,
-  // },
   userCardHeader: {
     flexDirection: "row",
     alignItems: "center",

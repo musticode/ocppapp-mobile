@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
+    paddingLeft: 10,
     gap: 8,
   },
   logoContainer: {
@@ -279,6 +280,7 @@ const styles = StyleSheet.create({
   headerIcon: {
     width: 40,
     height: 40,
+    // paddingLeft: 10,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,

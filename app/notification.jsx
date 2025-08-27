@@ -13,6 +13,7 @@ import { router } from "expo-router";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { Colors as Color } from "@/constants/Colors";
 
 // Mock notification data
 const mockNotifications = [
@@ -162,7 +163,8 @@ const NotificationFilter = ({ activeFilter, onFilterChange }) => {
               {
                 backgroundColor:
                   activeFilter === filter.key
-                    ? Colors[theme].tint
+                    ? // ? Colors[theme].tint
+                      Color.green.primary
                     : Colors[theme].background,
                 borderColor: Colors[theme].icon + "30",
               },

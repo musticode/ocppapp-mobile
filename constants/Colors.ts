@@ -47,6 +47,9 @@ export const Colors = {
   blue: {
     primary: "#38BBE5",
   },
+  blue2: {
+    primary: "#2196F3",
+  },
   yellow: {
     primary: "#F5C71F",
   },
