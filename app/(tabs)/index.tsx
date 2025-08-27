@@ -96,6 +96,7 @@ export default function HomeScreen() {
           </View>
         }
       >
+        {/* will be removed */}
         <View style={{ flex: 1 }}>
           <TouchableOpacity onPress={() => router.push("/startcharging")}>
             <Text>Start Charging</Text>

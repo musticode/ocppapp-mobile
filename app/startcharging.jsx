@@ -31,11 +31,12 @@ export default function StartCharging() {
   });
   const [localSelectedConnector, setLocalSelectedConnector] = useState(null);
   const [selectedUnits, setSelectedUnits] = useState(12);
-  const [unitRateValue, setUnitRateValue] = useState(14);
+  const [isDragging, setIsDragging] = useState(false);
+  const [unitRateValue, setUnitRateValue] = useState(11.3);
   const [hourRateValue, setHourRateValue] = useState(100);
   const [cardNumber, setCardNumber] = useState("1234-5678-9012-3456");
   const [isLoading, setIsLoading] = useState(false);
-  const unitRateRef = useRef(14);
+  const unitRateRef = useRef(12.3);
   const hourRateRef = useRef(100);
 
   useEffect(() => {
@@ -74,6 +75,19 @@ export default function StartCharging() {
 
       if (localSelectedConnector) {
         console.log("selected connector PROCEED", localSelectedConnector);
+
+        try {
+          const response = await axiosInstance.post("/start-charging", {
+            connectorId: localSelectedConnector.connectorId,
+            units: selectedUnits,
+            unitRate: unitRateValue,
+            hourRate: hourRateValue,
+            cardNumber: cardNumber,
+          });
+          console.log(response.data);
+        } catch (error) {
+          console.error("Error starting charging:", error);
+        }
       }
     } catch (error) {
       console.error("Error starting charging:", error);
@@ -179,10 +193,12 @@ export default function StartCharging() {
                 setSelectedUnits(12);
               }}
             >
-              <Text style={styles.rateLabel}>Units</Text>
-              <Text style={styles.rateValue}>{unitRateValue}</Text>
+              <Text style={styles.rateLabel}>Tariff per unit (kwh)</Text>
+              <Text style={styles.rateValue}>
+                {unitRateValue.toFixed(2)} TL{" "}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.rateCard}
               onPress={() => {
                 setHourRateValue(100);
@@ -190,7 +206,7 @@ export default function StartCharging() {
             >
               <Text style={styles.rateLabel}>Hours</Text>
               <Text style={styles.rateValue}>{hourRateValue}/hr</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           {/* Charging Units Selection */}
@@ -201,53 +217,104 @@ export default function StartCharging() {
 
             {/* Slider */}
             <View style={styles.sliderContainer}>
-              <View style={styles.sliderTrack}>
+              <TouchableOpacity
+                style={styles.sliderTrack}
+                onPress={(event) => {
+                  const { locationX } = event.nativeEvent;
+                  const sliderWidth = 280; // Approximate slider width
+                  const newPosition = Math.round(
+                    (locationX / sliderWidth) * 60
+                  );
+                  setSelectedUnits(Math.max(0, Math.min(60, newPosition)));
+                }}
+                activeOpacity={1}
+              >
                 <View
                   style={[
                     styles.sliderFill,
                     { width: `${(selectedUnits / 60) * 100}%` },
                   ]}
                 />
-                <View
+                <TouchableOpacity
                   style={[
                     styles.sliderHandle,
                     { left: `${(selectedUnits / 60) * 100}%` },
+                    isDragging && styles.sliderHandleDragging,
                   ]}
+                  onPressIn={() => setIsDragging(true)}
+                  onPressOut={() => setIsDragging(false)}
+                  activeOpacity={0.8}
                 />
-              </View>
+              </TouchableOpacity>
               <Text style={styles.selectedUnits}>{selectedUnits} units</Text>
             </View>
 
             <View style={styles.sliderRange}>
               <Text style={styles.rangeText}>0</Text>
+              <Text style={styles.currentValueText}>{selectedUnits}</Text>
               <Text style={styles.rangeText}>60</Text>
             </View>
 
             {/* Preset Buttons */}
             <View style={styles.presetButtons}>
               <TouchableOpacity
-                style={styles.presetButton}
+                style={[
+                  styles.presetButton,
+                  selectedUnits === 20 && styles.selectedPresetButton,
+                ]}
                 onPress={() => handlePresetUnits(20)}
               >
-                <Text style={styles.presetButtonText}>20 units</Text>
+                <Text
+                  style={[
+                    styles.presetButtonText,
+                    selectedUnits === 20 && styles.selectedPresetButtonText,
+                  ]}
+                >
+                  20 units
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.presetButton}
-                onPress={() => handlePresetUnits(25)}
-              >
-                <Text style={styles.presetButtonText}>25 units</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.presetButton}
+                style={[
+                  styles.presetButton,
+                  selectedUnits === 30 && styles.selectedPresetButton,
+                ]}
                 onPress={() => handlePresetUnits(30)}
               >
-                <Text style={styles.presetButtonText}>30 units</Text>
+                <Text
+                  style={[
+                    styles.presetButtonText,
+                    selectedUnits === 30 && styles.selectedPresetButtonText,
+                  ]}
+                >
+                  30 units
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.presetButton,
+                  selectedUnits === 60 && styles.selectedPresetButton,
+                ]}
+                onPress={() => handlePresetUnits(60)}
+              >
+                <Text
+                  style={[
+                    styles.presetButtonText,
+                    selectedUnits === 60 && styles.selectedPresetButtonText,
+                  ]}
+                >
+                  60 units
+                </Text>
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.estimatedTime}>
-              Estimated time : {estimatedTime} mins
-            </Text>
+            <View style={styles.estimatesContainer}>
+              <Text style={styles.estimatedTime}>
+                Estimated time: {estimatedTime} mins
+              </Text>
+              <Text style={styles.estimatedCost}>
+                Cost per unit: {unitCostTariff.toFixed(2)} TL
+              </Text>
+            </View>
           </View>
         </View>
         {/* Payment Details */}
@@ -628,6 +695,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
   },
+  currentValueText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.blue2.primary,
+  },
   presetButtons: {
     flexDirection: "row",
     marginBottom: 16,
@@ -650,6 +722,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     textAlign: "center",
+  },
+  estimatesContainer: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  estimatedCost: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 5,
   },
   bottomSection: {
     backgroundColor: "#fff",
@@ -725,5 +807,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "500",
     marginLeft: 8,
+  },
+  selectedPresetButton: {
+    backgroundColor: Colors.blue2.primary,
+    borderColor: Colors.blue2.primary,
+    borderWidth: 1,
+  },
+  selectedPresetButtonText: {
+    color: "#fff",
+  },
+  sliderHandleDragging: {
+    transform: [{ scale: 1.2 }],
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
