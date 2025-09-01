@@ -63,6 +63,11 @@ export default function StartCharging() {
       console.log(response.data);
       // todo : will be updated
       //setUnitCostTariff(response.data.);
+      if (response.data.unitCostTariff) {
+        setUnitCostTariff(response.data.unitCostTariff);
+      } else {
+        setUnitCostTariff(12.3);
+      }
     } catch (error) {
       console.error("Error fetching connector tariff:", error);
     }
