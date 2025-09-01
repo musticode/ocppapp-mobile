@@ -7,12 +7,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  StatusBar,
 } from "react-native";
 import { AppHeader } from "@/components/AppHeader";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { BatteryStatusCard } from "@/components/BatteryStatusCard";
@@ -74,346 +72,223 @@ export default function Vehicle() {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
       <AppHeader
         title="My Vehicle"
         showBackButton={true}
         showProfile={true}
         onLeftPress={() => router.back()}
       />
-      <ParallaxScrollView
-        headerBackgroundColor={{ light: "#F8F9FB", dark: "#121212" }}
+
+      <ScrollView
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
       >
-        {/* Vehicle Header */}
-        <View style={styles.vehicleHeader}>
-          <Image source={vehicleData.avatar} style={styles.vehicleImage} />
-          <View style={styles.headerTextContainer}>
-            <ThemedText type="title" style={styles.vehicleName}>
-              {vehicleData.year} {vehicleData.make} {vehicleData.model}
-            </ThemedText>
-            <ThemedText style={styles.vehicleTrim}>
-              {vehicleData.trim}
-            </ThemedText>
-            <ThemedText style={styles.licensePlate}>
-              {vehicleData.licensePlate}
-            </ThemedText>
+        {/* Hero Vehicle Section */}
+        <View style={styles.heroSection}>
+          <View style={styles.vehicleHeader}>
+            <Image source={vehicleData.avatar} style={styles.vehicleImage} />
+            <View style={styles.headerTextContainer}>
+              <Text style={styles.vehicleName}>
+                {vehicleData.year} {vehicleData.make} {vehicleData.model}
+              </Text>
+              <Text style={styles.vehicleTrim}>{vehicleData.trim}</Text>
+              <View style={styles.licensePlateContainer}>
+                <Text style={styles.licensePlate}>
+                  {vehicleData.licensePlate}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Quick Stats Overview */}
+          <View style={styles.quickStats}>
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>{vehicleData.currentCharge}%</Text>
+              <Text style={styles.statLabel}>Battery</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>{vehicleData.range}</Text>
+              <Text style={styles.statLabel}>Range (mi)</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>
+                {vehicleData.totalMiles.toLocaleString()}
+              </Text>
+              <Text style={styles.statLabel}>Total Miles</Text>
+            </View>
           </View>
         </View>
 
-        {/* Battery Status Card */}
-        <BatteryStatusCard
-          batteryLevel={`${vehicleData.currentCharge}%`}
-          estimatedRange={`${vehicleData.range} km`}
-          efficiency={`${vehicleData.efficiency} km/kWh`}
-        />
-
-        {/* Battery Status Card */}
-        {/* <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "20",
-            },
-          ]}
-        >
-          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-            BATTERY STATUS
-          </ThemedText>
-          <View style={styles.batteryContainer}>
-            <View style={styles.batteryInfo}>
-              <Text
-                style={[
-                  styles.batteryPercentage,
-                  { color: getBatteryColor(vehicleData.currentCharge) },
-                ]}
-              >
-                {vehicleData.currentCharge}%
-              </Text>
-              <Text style={[styles.batteryLabel, { color: colors.icon }]}>
-                Current Charge
-              </Text>
-            </View>
-            <View style={styles.batteryInfo}>
-              <Text style={[styles.batteryRange, { color: colors.text }]}>
-                {vehicleData.range} mi
-              </Text>
-              <Text style={[styles.batteryLabel, { color: colors.icon }]}>
-                Estimated Range
-              </Text>
-            </View>
-            <View style={styles.batteryInfo}>
-              <Text style={[styles.batteryEfficiency, { color: colors.text }]}>
-                {vehicleData.efficiency} mi/kWh
-              </Text>
-              <Text style={[styles.batteryLabel, { color: colors.icon }]}>
-                Efficiency
-              </Text>
-            </View>
-          </View>
-          <View style={styles.batteryBar}>
-            <View
-              style={[
-                styles.batteryFill,
-                {
-                  width: `${vehicleData.currentCharge}%`,
-                  backgroundColor: getBatteryColor(vehicleData.currentCharge),
-                },
-              ]}
+        {/* Content Section */}
+        <View style={styles.contentSection}>
+          {/* Battery Status Card */}
+          <View style={styles.cardContainer}>
+            <BatteryStatusCard
+              batteryLevel={`${vehicleData.currentCharge}%`}
+              estimatedRange={`${vehicleData.range} km`}
+              efficiency={`${vehicleData.efficiency} km/kWh`}
             />
           </View>
-        </View> */}
 
-        <VehicleInfoCard vehicle={vehicleData} />
-        {/* Vehicle Information Card */}
-        {/* <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "20",
-            },
-          ]}
-        >
-          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-            VEHICLE INFORMATION
-          </ThemedText>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>
-              Make & Model
-            </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {vehicleData.make} {vehicleData.model}
-            </Text>
+          {/* Vehicle Information Card */}
+          <View style={styles.cardContainer}>
+            <VehicleInfoCard vehicle={vehicleData} />
           </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Year</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {vehicleData.year}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Trim</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {vehicleData.trim}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Color</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {vehicleData.color}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>VIN</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {vehicleData.vin}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={[styles.label, { color: colors.icon }]}>Total Km</Text>
-            <Text style={[styles.value, { color: colors.text }]}>
-              {vehicleData.totalMiles.toLocaleString()} mi
-            </Text>
-          </View>
-        </View> */}
 
-        {/* Charging Statistics Card */}
-        <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "20",
-            },
-          ]}
-        >
-          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-            CHARGING STATISTICS
-          </ThemedText>
-          <View style={styles.statsGrid}>
-            <View style={styles.statItem}>
-              <Text style={[styles.statValue, { color: colors.tint }]}>
-                {vehicleData.chargingStats.totalSessions}
-              </Text>
-              <Text style={[styles.statLabel, { color: colors.icon }]}>
-                Total Sessions
-              </Text>
+          {/* Charging Statistics Card */}
+          <View style={styles.cardContainer}>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Charging Statistics</Text>
+              <View style={styles.statsGrid}>
+                <View style={styles.statCard}>
+                  <Text style={styles.statCardValue}>
+                    {vehicleData.chargingStats.totalSessions}
+                  </Text>
+                  <Text style={styles.statCardLabel}>Total Sessions</Text>
+                </View>
+                <View style={styles.statCard}>
+                  <Text style={styles.statCardValue}>
+                    {vehicleData.chargingStats.totalEnergy} kWh
+                  </Text>
+                  <Text style={styles.statCardLabel}>Total Energy</Text>
+                </View>
+                <View style={styles.statCard}>
+                  <Text style={styles.statCardValue}>
+                    {formatCurrency(vehicleData.chargingStats.totalCost)}
+                  </Text>
+                  <Text style={styles.statCardLabel}>Total Spent</Text>
+                </View>
+                <View style={styles.statCard}>
+                  <Text style={styles.statCardValue}>
+                    {vehicleData.chargingStats.averageSession} kWh
+                  </Text>
+                  <Text style={styles.statCardLabel}>Avg Session</Text>
+                </View>
+              </View>
+              <View style={styles.favoriteStation}>
+                <Text style={styles.favoriteLabel}>Favorite Station</Text>
+                <Text style={styles.favoriteValue}>
+                  {vehicleData.chargingStats.favoriteStation}
+                </Text>
+              </View>
             </View>
-            <View style={styles.statItem}>
-              <Text style={[styles.statValue, { color: colors.tint }]}>
-                {vehicleData.chargingStats.totalEnergy} kWh
-              </Text>
-              <Text style={[styles.statLabel, { color: colors.icon }]}>
-                Total Energy
-              </Text>
+          </View>
+
+          {/* Maintenance Status Card */}
+          <View style={styles.cardContainer}>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Maintenance Status</Text>
+              <View style={styles.maintenanceGrid}>
+                <View style={styles.maintenanceCard}>
+                  <Text
+                    style={[
+                      styles.maintenanceValue,
+                      {
+                        color: getHealthColor(
+                          parseInt(vehicleData.maintenance.tireHealth)
+                        ),
+                      },
+                    ]}
+                  >
+                    {vehicleData.maintenance.tireHealth}
+                  </Text>
+                  <Text style={styles.maintenanceLabel}>Tire Health</Text>
+                </View>
+                <View style={styles.maintenanceCard}>
+                  <Text
+                    style={[
+                      styles.maintenanceValue,
+                      {
+                        color: getHealthColor(
+                          parseInt(vehicleData.maintenance.brakeHealth)
+                        ),
+                      },
+                    ]}
+                  >
+                    {vehicleData.maintenance.brakeHealth}
+                  </Text>
+                  <Text style={styles.maintenanceLabel}>Brake Health</Text>
+                </View>
+                <View style={styles.maintenanceCard}>
+                  <Text
+                    style={[
+                      styles.maintenanceValue,
+                      {
+                        color: getHealthColor(
+                          parseInt(vehicleData.maintenance.batteryHealth)
+                        ),
+                      },
+                    ]}
+                  >
+                    {vehicleData.maintenance.batteryHealth}
+                  </Text>
+                  <Text style={styles.maintenanceLabel}>Battery Health</Text>
+                </View>
+                <View style={styles.maintenanceCard}>
+                  <Text style={styles.maintenanceValue}>
+                    {vehicleData.maintenance.tirePressure}
+                  </Text>
+                  <Text style={styles.maintenanceLabel}>Tire Pressure</Text>
+                </View>
+              </View>
+              <View style={styles.serviceInfo}>
+                <View style={styles.serviceRow}>
+                  <Text style={styles.serviceLabel}>Last Service</Text>
+                  <Text style={styles.serviceValue}>
+                    {vehicleData.lastService}
+                  </Text>
+                </View>
+                <View style={styles.serviceRow}>
+                  <Text style={styles.serviceLabel}>Next Service</Text>
+                  <Text style={styles.serviceValue}>
+                    {vehicleData.nextService}
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.statItem}>
-              <Text style={[styles.statValue, { color: colors.tint }]}>
-                {formatCurrency(vehicleData.chargingStats.totalCost)}
-              </Text>
-              <Text style={[styles.statLabel, { color: colors.icon }]}>
-                Total Spent
-              </Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={[styles.statValue, { color: colors.tint }]}>
-                {vehicleData.chargingStats.averageSession} kWh
-              </Text>
-              <Text style={[styles.statLabel, { color: colors.icon }]}>
-                Avg Session
-              </Text>
+          </View>
+
+          {/* Quick Actions */}
+          <View style={styles.cardContainer}>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Quick Actions</Text>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity style={styles.actionButton}>
+                  <View
+                    style={[styles.actionIcon, { backgroundColor: "#E3F2FD" }]}
+                  >
+                    <IconSymbol name="location" size={24} color="#1976D2" />
+                  </View>
+                  <Text style={styles.actionText}>Find Charging</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionButton}>
+                  <View
+                    style={[styles.actionIcon, { backgroundColor: "#F3E5F5" }]}
+                  >
+                    <IconSymbol
+                      name="wrench.and.screwdriver"
+                      size={24}
+                      color="#7B1FA2"
+                    />
+                  </View>
+                  <Text style={styles.actionText}>Schedule Service</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionButton}>
+                  <View
+                    style={[styles.actionIcon, { backgroundColor: "#E8F5E8" }]}
+                  >
+                    <IconSymbol name="doc.text" size={24} color="#388E3C" />
+                  </View>
+                  <Text style={styles.actionText}>View Manual</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
-
-        {/* Maintenance Status Card */}
-        <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "20",
-            },
-          ]}
-        >
-          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-            MAINTENANCE STATUS
-          </ThemedText>
-          <View style={styles.maintenanceGrid}>
-            <View style={styles.maintenanceItem}>
-              <Text
-                style={[
-                  styles.maintenanceValue,
-                  {
-                    color: getHealthColor(
-                      parseInt(vehicleData.maintenance.tireHealth)
-                    ),
-                  },
-                ]}
-              >
-                {vehicleData.maintenance.tireHealth}
-              </Text>
-              <Text style={[styles.maintenanceLabel, { color: colors.icon }]}>
-                Tire Health
-              </Text>
-            </View>
-            <View style={styles.maintenanceItem}>
-              <Text
-                style={[
-                  styles.maintenanceValue,
-                  {
-                    color: getHealthColor(
-                      parseInt(vehicleData.maintenance.brakeHealth)
-                    ),
-                  },
-                ]}
-              >
-                {vehicleData.maintenance.brakeHealth}
-              </Text>
-              <Text style={[styles.maintenanceLabel, { color: colors.icon }]}>
-                Brake Health
-              </Text>
-            </View>
-            <View style={styles.maintenanceItem}>
-              <Text
-                style={[
-                  styles.maintenanceValue,
-                  {
-                    color: getHealthColor(
-                      parseInt(vehicleData.maintenance.batteryHealth)
-                    ),
-                  },
-                ]}
-              >
-                {vehicleData.maintenance.batteryHealth}
-              </Text>
-              <Text style={[styles.maintenanceLabel, { color: colors.icon }]}>
-                Battery Health
-              </Text>
-            </View>
-            <View style={styles.maintenanceItem}>
-              <Text style={[styles.maintenanceValue, { color: colors.text }]}>
-                {vehicleData.maintenance.tirePressure}
-              </Text>
-              <Text style={[styles.maintenanceLabel, { color: colors.icon }]}>
-                Tire Pressure
-              </Text>
-            </View>
-          </View>
-          <View style={styles.serviceInfo}>
-            <View style={styles.serviceRow}>
-              <Text style={[styles.serviceLabel, { color: colors.icon }]}>
-                Last Service
-              </Text>
-              <Text style={[styles.serviceValue, { color: colors.text }]}>
-                {vehicleData.lastService}
-              </Text>
-            </View>
-            <View style={styles.serviceRow}>
-              <Text style={[styles.serviceLabel, { color: colors.icon }]}>
-                Next Service
-              </Text>
-              <Text style={[styles.serviceValue, { color: colors.text }]}>
-                {vehicleData.nextService}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Quick Actions */}
-        <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.background,
-              borderColor: colors.icon + "20",
-            },
-          ]}
-        >
-          <ThemedText type="defaultSemiBold" style={styles.cardTitle}>
-            QUICK ACTIONS
-          </ThemedText>
-          <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                { backgroundColor: colors.tint + "20" },
-              ]}
-            >
-              <IconSymbol name="location" size={24} color={colors.tint} />
-              <Text style={[styles.actionText, { color: colors.tint }]}>
-                Find Charging
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                { backgroundColor: colors.tint + "20" },
-              ]}
-            >
-              <IconSymbol
-                name="wrench.and.screwdriver"
-                size={24}
-                color={colors.tint}
-              />
-              <Text style={[styles.actionText, { color: colors.tint }]}>
-                Schedule Service
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                { backgroundColor: colors.tint + "20" },
-              ]}
-            >
-              <IconSymbol name="doc.text" size={24} color={colors.tint} />
-              <Text style={[styles.actionText, { color: colors.tint }]}>
-                View Manual
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ParallaxScrollView>
+      </ScrollView>
     </View>
   );
 }
@@ -423,215 +298,212 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f8f9fa",
   },
+  scrollContainer: {
+    flex: 1,
+  },
+  heroSection: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 30,
+    backgroundColor: "#fff",
+    marginHorizontal: 20,
+    marginTop: 20,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+  },
   vehicleHeader: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 24,
-    paddingHorizontal: 10,
   },
   vehicleImage: {
     width: 80,
     height: 80,
-    borderRadius: 12,
+    borderRadius: 16,
     marginRight: 16,
-    backgroundColor: "#EEE",
+    backgroundColor: "#f0f0f0",
   },
   headerTextContainer: {
     flex: 1,
   },
   vehicleName: {
-    fontSize: 20,
-    fontWeight: "600",
-    marginBottom: 4,
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#2c3e50",
+    marginBottom: 6,
   },
   vehicleTrim: {
     fontSize: 16,
-    color: "#888",
-    marginBottom: 4,
+    color: "#7f8c8d",
+    marginBottom: 8,
+  },
+  licensePlateContainer: {
+    backgroundColor: "#e3f2fd",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignSelf: "flex-start",
+    borderWidth: 1,
+    borderColor: "#bbdefb",
   },
   licensePlate: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
-    color: "#0a7ea4",
-    backgroundColor: "#f0f8ff",
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
-    alignSelf: "flex-start",
+    color: "#1976d2",
   },
-  summaryContainer: {
+  quickStats: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: "#f8f9fa",
-    marginHorizontal: 10,
-    borderRadius: 12,
-    marginBottom: 15,
-  },
-  summaryItem: {
     alignItems: "center",
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#f0f0f0",
   },
-  summaryValue: {
-    fontSize: 18,
+  statItem: {
+    alignItems: "center",
+    flex: 1,
+  },
+  statValue: {
+    fontSize: 20,
     fontWeight: "bold",
-    color: "#0a7ea4",
+    color: "#2c3e50",
+    marginBottom: 4,
   },
-  summaryLabel: {
+  statLabel: {
     fontSize: 12,
-    color: "#666",
-    marginTop: 2,
+    color: "#7f8c8d",
+    fontWeight: "500",
+  },
+  statDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: "#e0e0e0",
+  },
+  contentSection: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40,
+  },
+  cardContainer: {
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
   },
   card: {
-    marginHorizontal: 10,
-    marginBottom: 18,
+    backgroundColor: "#fff",
     borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
+    padding: 20,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 3,
   },
   cardTitle: {
-    fontSize: 13,
-    color: "#888",
-    marginBottom: 16,
-    letterSpacing: 1,
-  },
-  batteryContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  batteryInfo: {
-    alignItems: "center",
-    flex: 1,
-  },
-  batteryPercentage: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  batteryRange: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  batteryEfficiency: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 4,
-  },
-  batteryLabel: {
-    fontSize: 12,
-    textAlign: "center",
-  },
-  batteryBar: {
-    height: 8,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 4,
-    overflow: "hidden",
-  },
-  batteryFill: {
-    height: "100%",
-    borderRadius: 4,
-  },
-  infoRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
-  },
-  label: {
-    fontSize: 16,
-    flex: 1,
-  },
-  value: {
-    fontSize: 16,
-    flex: 2,
-    textAlign: "right",
-    fontWeight: "500",
+    color: "#2c3e50",
+    marginBottom: 20,
+    letterSpacing: 0.5,
   },
   statsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  statItem: {
+  statCard: {
     width: "48%",
     alignItems: "center",
     marginBottom: 16,
+    padding: 16,
+    backgroundColor: "#f8f9fa",
+    borderRadius: 12,
   },
-  statValue: {
-    fontSize: 18,
+  statCardValue: {
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 4,
+    color: "#2c3e50",
+    marginBottom: 6,
   },
-  statLabel: {
+  statCardLabel: {
     fontSize: 12,
+    color: "#7f8c8d",
+    fontWeight: "500",
     textAlign: "center",
   },
   favoriteStation: {
-    paddingTop: 12,
+    paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: "#F0F0F0",
+    borderTopColor: "#f0f0f0",
   },
   favoriteLabel: {
     fontSize: 14,
-    marginBottom: 4,
+    color: "#7f8c8d",
+    marginBottom: 6,
+    fontWeight: "500",
   },
   favoriteValue: {
     fontSize: 16,
-    fontWeight: "500",
+    color: "#2c3e50",
+    fontWeight: "600",
   },
   maintenanceGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  maintenanceItem: {
+  maintenanceCard: {
     width: "48%",
     alignItems: "center",
     marginBottom: 16,
+    padding: 16,
+    backgroundColor: "#f8f9fa",
+    borderRadius: 12,
   },
   maintenanceValue: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 4,
+    marginBottom: 6,
   },
   maintenanceLabel: {
     fontSize: 12,
+    color: "#7f8c8d",
+    fontWeight: "500",
     textAlign: "center",
   },
   serviceInfo: {
-    paddingTop: 12,
+    paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: "#F0F0F0",
+    borderTopColor: "#f0f0f0",
   },
   serviceRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 4,
+    paddingVertical: 8,
   },
   serviceLabel: {
     fontSize: 14,
+    color: "#7f8c8d",
+    fontWeight: "500",
   },
   serviceValue: {
     fontSize: 14,
-    fontWeight: "500",
+    color: "#2c3e50",
+    fontWeight: "600",
   },
   actionButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 12,
   },
   actionButton: {
     flex: 1,
@@ -639,12 +511,19 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 12,
     borderRadius: 12,
-    marginHorizontal: 4,
+  },
+  actionIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
   },
   actionText: {
     fontSize: 12,
-    fontWeight: "500",
-    marginTop: 8,
+    fontWeight: "600",
+    color: "#2c3e50",
     textAlign: "center",
   },
 });
