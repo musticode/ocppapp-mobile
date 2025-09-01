@@ -4,6 +4,8 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
+  ScrollView,
+  StatusBar,
 } from "react-native";
 
 import { AppHeader } from "@/components/AppHeader";
@@ -80,6 +82,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.screen}>
+      <StatusBar barStyle="light-content" backgroundColor="#A1CEDC" />
       <AppHeader
         title="EV Charge"
         showBackButton={false}
@@ -87,370 +90,243 @@ export default function HomeScreen() {
         showNotifications={true}
         onNotificationPress={() => router.push("/notification")}
       />
-      <ParallaxScrollView
-        headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-        headerImage={
-          <View style={styles.headerContent}>
+
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        {/* Hero Section */}
+        <View style={styles.heroSection}>
+          <View style={styles.heroContent}>
             <Text style={styles.welcomeText}>Welcome back!</Text>
             <Text style={styles.subtitleText}>Ready to charge your EV?</Text>
+
+            {/* Quick Action Button */}
+            <TouchableOpacity
+              style={styles.primaryButton}
+              onPress={() => router.push("/startcharging")}
+            >
+              <Text style={styles.primaryButtonText}>Start Charging</Text>
+            </TouchableOpacity>
           </View>
-        }
-      >
-        <View style={{ flex: 1 }}>
-          <TouchableOpacity onPress={() => router.push("/startcharging")}>
-            <Text>Start Charging</Text>
-          </TouchableOpacity>
         </View>
-        <UserInfoCard user={mockUser} />
-        <VehicleCard vehicle={mockCar} />
-        <TransactionCard transaction={mockLastTransaction} onClose={() => {}} />
-      </ParallaxScrollView>
+
+        {/* Content Section */}
+        <View style={styles.contentSection}>
+          {/* User Info Card */}
+          <View style={styles.cardContainer}>
+            <UserInfoCard user={mockUser} />
+          </View>
+
+          {/* Vehicle Status Card */}
+          <View style={styles.cardContainer}>
+            <VehicleCard vehicle={mockCar} />
+          </View>
+
+          {/* Recent Transaction Card */}
+          <View style={styles.cardContainer}>
+            <TransactionCard
+              transaction={mockLastTransaction}
+              onClose={() => {}}
+            />
+          </View>
+
+          {/* Quick Actions Grid */}
+          <View style={styles.quickActionsSection}>
+            <Text style={styles.sectionTitle}>Quick Actions</Text>
+            <View style={styles.quickActionsGrid}>
+              <TouchableOpacity
+                style={[styles.actionButton, { backgroundColor: "#E3F2FD" }]}
+                onPress={() => router.push("/qrscanner")}
+              >
+                <Text style={styles.actionEmoji}>📱</Text>
+                <Text style={styles.actionText}>Scan QR</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.actionButton, { backgroundColor: "#F3E5F5" }]}
+                onPress={() => router.push("/vehicle")}
+              >
+                <Text style={styles.actionEmoji}>🚗</Text>
+                <Text style={styles.actionText}>My Vehicle</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.actionButton, { backgroundColor: "#E8F5E8" }]}
+                onPress={() => router.push("/transactions")}
+              >
+                <Text style={styles.actionEmoji}>📊</Text>
+                <Text style={styles.actionText}>History</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.actionButton, { backgroundColor: "#FFF3E0" }]}
+                onPress={() => router.push("/payments")}
+              >
+                <Text style={styles.actionEmoji}>💳</Text>
+                <Text style={styles.actionText}>Payments</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Stats Overview */}
+          <View style={styles.statsSection}>
+            <Text style={styles.sectionTitle}>Your Stats</Text>
+            <View style={styles.statsGrid}>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>{mockUser.totalCharges}</Text>
+                <Text style={styles.statLabel}>Total Charges</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>${mockUser.totalSavings}</Text>
+                <Text style={styles.statLabel}>Total Savings</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>{mockCar.batteryLevel}%</Text>
+                <Text style={styles.statLabel}>Battery Level</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerContent: {
+  screen: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+  },
+  container: {
+    flex: 1,
+  },
+  heroSection: {
+    backgroundColor: "#A1CEDC",
+    paddingTop: 20,
+    paddingBottom: 40,
     paddingHorizontal: 20,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  heroContent: {
+    alignItems: "center",
+    paddingTop: 20,
   },
   welcomeText: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "bold",
     color: "#fff",
     textAlign: "center",
+    marginBottom: 8,
+    textShadowColor: "rgba(0, 0, 0, 0.1)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   subtitleText: {
-    fontSize: 16,
+    fontSize: 18,
     color: "#fff",
-    opacity: 0.9,
-    marginTop: 4,
-  },
-  userCardHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  userAvatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "#f0f0f0",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  avatarText: {
-    fontSize: 24,
-    color: "#222",
-  },
-  userInfo: {
-    flex: 1,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 2,
-  },
-  userEmail: {
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  membershipBadge: {
-    backgroundColor: "#FFD700",
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 12,
-    alignSelf: "flex-start",
-  },
-  membershipText: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#000",
-  },
-  editButton: {
-    padding: 8,
-  },
-  userStats: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  statItem: {
-    flex: 1,
-    alignItems: "center",
-  },
-  statValue: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 2,
-  },
-  statLabel: {
-    fontSize: 12,
-  },
-  statDivider: {
-    width: 1,
-    height: 30,
-    backgroundColor: "#e0e0e0",
-    marginHorizontal: 16,
-  },
-  carCardHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  carIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "#f0f0f0",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  carEmoji: {
-    fontSize: 24,
-  },
-  carInfo: {
-    flex: 1,
-  },
-  carModel: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 2,
-  },
-  carStatus: {
-    fontSize: 14,
-  },
-  batteryContainer: {
-    alignItems: "center",
-  },
-  batteryOutline: {
-    width: 40,
-    height: 20,
-    borderWidth: 2,
-    borderColor: "#ccc",
-    borderRadius: 3,
-    overflow: "hidden",
-    marginBottom: 4,
-  },
-  batteryLevel: {
-    height: "100%",
-    borderRadius: 1,
-  },
-  batteryText: {
-    fontSize: 12,
-    fontWeight: "600",
-  },
-  carDetails: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  carDetailItem: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  carDetailText: {
-    fontSize: 14,
-    marginLeft: 4,
-  },
-  transactionHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  viewAllText: {
-    fontSize: 14,
+    opacity: 0.95,
+    marginBottom: 30,
+    textAlign: "center",
     fontWeight: "500",
   },
-  transactionContent: {
-    gap: 12,
-  },
-  stationInfo: {
-    gap: 4,
-  },
-  stationName: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  stationLocation: {
-    fontSize: 14,
-  },
-  transactionDate: {
-    fontSize: 12,
-  },
-  transactionMetrics: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  transactionMetric: {
-    alignItems: "center",
-    flex: 1,
-  },
-  metricValue: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 2,
-  },
-  metricLabel: {
-    fontSize: 12,
-  },
-  quickActionsTitle: {
-    marginBottom: 16,
-  },
-  quickActionsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
-  },
-  actionButton: {
-    width: (width - 64) / 2 - 6,
-    height: 80,
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 8,
-  },
-  actionText: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  screen: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
-  card: {
-    width: "92%",
-    maxWidth: 400,
+  primaryButton: {
     backgroundColor: "#fff",
-    borderRadius: 20,
-    padding: 24,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 25,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  primaryButtonText: {
+    color: "#A1CEDC",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  contentSection: {
+    paddingHorizontal: 20,
+    paddingTop: 30,
+    paddingBottom: 40,
+  },
+  cardContainer: {
+    marginBottom: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 4,
-    alignItems: "center",
   },
-  title: {
+  quickActionsSection: {
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#2c3e50",
+    marginBottom: 20,
+    marginLeft: 4,
+  },
+  quickActionsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 15,
+  },
+  actionButton: {
+    width: (width - 70) / 2,
+    height: 100,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  actionEmoji: {
     fontSize: 28,
-    fontWeight: "bold",
-    color: "#222",
-    marginBottom: 6,
-    marginTop: 8,
-    textAlign: "center",
+    marginBottom: 8,
   },
-  subtitle: {
-    fontSize: 15,
-    color: "#888",
-    marginBottom: 24,
-    textAlign: "center",
-  },
-  inputContainer: {
-    width: "100%",
-    marginBottom: 12,
-  },
-  inputLabel: {
-    fontSize: 15,
-    color: "#222",
-    marginBottom: 6,
-    marginLeft: 2,
-  },
-  input: {
-    width: "100%",
-    height: 48,
-    borderColor: "#e0e0e0",
-    borderWidth: 1.2,
-    borderRadius: 10,
-    paddingHorizontal: 16,
+  actionText: {
     fontSize: 16,
-    backgroundColor: "#fafbfc",
+    fontWeight: "600",
+    color: "#2c3e50",
   },
-  passwordRow: {
+  statsSection: {
+    marginBottom: 20,
+  },
+  statsGrid: {
     flexDirection: "row",
-    alignItems: "center",
+    gap: 15,
   },
-  eyeIcon: {
-    position: "absolute",
-    right: 12,
-    top: 12,
-    padding: 4,
-  },
-  forgotPasswordBtn: {
-    alignSelf: "flex-end",
-    marginTop: 4,
-    marginBottom: 2,
-  },
-  forgotPasswordText: {
-    color: "#1ec28b",
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  signInButton: {
-    width: "100%",
-    height: 48,
-    backgroundColor: "#1ec28b",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 18,
-  },
-  signInButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  dividerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    marginVertical: 10,
-  },
-  divider: {
+  statCard: {
     flex: 1,
-    height: 1,
-    backgroundColor: "#e0e0e0",
-  },
-  orText: {
-    marginHorizontal: 10,
-    color: "#888",
-    fontSize: 15,
-  },
-  socialRow: {
-    flexDirection: "row",
-    justifyContent: "center",
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 16,
     alignItems: "center",
-    width: "100%",
-    marginBottom: 18,
-    marginTop: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  socialBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "#f7f7f7",
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-  },
-  signupRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 2,
-  },
-  signupText: {
-    color: "#888",
-    fontSize: 15,
-  },
-  signupLink: {
-    color: "#1ec28b",
+  statValue: {
+    fontSize: 24,
     fontWeight: "bold",
-    fontSize: 15,
+    color: "#2c3e50",
+    marginBottom: 6,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: "#7f8c8d",
+    fontWeight: "500",
+    textAlign: "center",
   },
 });

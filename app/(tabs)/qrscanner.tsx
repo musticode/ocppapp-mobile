@@ -32,12 +32,11 @@ export default function QRScanner() {
 
   const fetchChargeBox = async (chargeBoxIdentifier: string) => {
     console.log("Fetching charge box:", chargeBoxIdentifier);
+
     console.log(
       "Fetching connector status for charge box:",
       chargeBoxIdentifier
     );
-
-    let identifier = chargeBoxIdentifier;
 
     try {
       const response = await axiosService.get(`/charge-box/cp`, {
