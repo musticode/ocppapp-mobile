@@ -3,68 +3,83 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   Dimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { Colors } from "@/constants/Colors";
 
 const { width, height } = Dimensions.get("window");
 
 export const GetStarted = () => {
   return (
-    <LinearGradient
-      //colors={["#2c3e50", "#34495e", "#2c3e50"]}
-      colors={["#299799", "#6BBF91", "#AABD66", "#C7BC52", "#FDBB2D"]}
-      style={styles.container}
-    >
-      {/* Header with Logo */}
-      <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <View style={styles.logoCircle}>
-            <Text style={styles.logoText}>E</Text>
+    <LinearGradient colors={["#f5f5f5", "#e8e8e8"]} style={styles.container}>
+      {/* Main Content Card */}
+      <View style={styles.contentCard}>
+        {/* Illustration Section */}
+        <View style={styles.illustrationContainer}>
+          {/* Charging Station */}
+          <View style={styles.stationContainer}>
+            <View style={styles.station1}>
+              <View style={styles.stationDisplay} />
+              <View style={styles.stationBody} />
+            </View>
+            <View style={styles.station2}>
+              <View style={styles.stationDisplay} />
+              <View style={styles.stationBody} />
+            </View>
           </View>
-          <Text style={styles.appName}>EV Charge</Text>
+
+          {/* Car */}
+          <View style={styles.carContainer}>
+            <View style={styles.carBody}>
+              <View style={styles.carWindow} />
+              <View style={styles.carDoor} />
+            </View>
+            <View style={styles.carWheelContainer}>
+              <View style={styles.carWheel} />
+              <View style={styles.carWheel} />
+            </View>
+          </View>
+
+          {/* Charging Cable */}
+          <View style={styles.chargingCable} />
         </View>
-      </View>
 
-      {/* Main Content */}
-      <View style={styles.content}>
-        {/* Title Text */}
-        <View style={styles.titleContainer}>
-          <Text style={styles.titleLine}>Find your dream</Text>
-          <Text style={styles.highlightedText}>electric car</Text>
-          <Text style={styles.titleLine}>and</Text>
-          <Text style={styles.titleLine}>start your journey</Text>
+        {/* Text Content */}
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>Powering Your Journey</Text>
+          <Text style={styles.description}>
+            Find, reserve, and pay for EV charging across the nation with ease.
+          </Text>
         </View>
 
-        {/* Car and Charging Station Image */}
-        <View style={styles.imageContainer}>
-          <Image
-            source={require("../assets/images/ev-electric-car-connect-charging-260nw-2367123101.png")}
-            style={styles.carImage}
-            resizeMode="contain"
-          />
+        {/* Buttons */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.signUpButton}
+            onPress={() => router.push("/register")}
+          >
+            <Text style={styles.signUpButtonText}>Sign Up</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.logInButton}
+            onPress={() => router.push("/login")}
+          >
+            <Text style={styles.logInButtonText}>Log In</Text>
+          </TouchableOpacity>
         </View>
-      </View>
 
-      {/* Bottom Section */}
-      <View style={styles.bottomSection}>
-        {/* Get Started Button */}
-        <TouchableOpacity
-          style={styles.getStartedButton}
-          onPress={() => router.push("/login")}
-        >
-          <Text style={styles.getStartedButtonText}>Get Started</Text>
-        </TouchableOpacity>
-
-        {/* Navigation Indicators */}
-        {/* <View style={styles.navigationIndicators}>
-          <View style={styles.indicatorActive} />
-          <View style={styles.indicator} />
-          <View style={styles.indicator} />
-        </View> */}
+        {/* Legal Disclaimer */}
+        <View style={styles.legalContainer}>
+          <Text style={styles.legalText}>
+            By continuing, you agree to our{" "}
+            <Text style={styles.legalLink}>Terms of Service</Text> and{" "}
+            <Text style={styles.legalLink}>Privacy Policy</Text>.
+          </Text>
+        </View>
       </View>
     </LinearGradient>
   );
@@ -73,104 +88,163 @@ export const GetStarted = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f5f5f5",
   },
-  header: {
-    paddingTop: 60,
+  contentCard: {
+    flex: 1,
+    backgroundColor: "#fff",
+
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 32,
+    paddingTop: 40,
+    paddingBottom: 30,
+  },
+  illustrationContainer: {
+    height: height * 0.35,
+    backgroundColor: "#8FBC8F",
+    borderRadius: 16,
+    marginBottom: 40,
+    position: "relative",
+    overflow: "hidden",
+    justifyContent: "flex-end",
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
-  logoContainer: {
+  stationContainer: {
+    position: "absolute",
+    left: 30,
+    bottom: 20,
     flexDirection: "row",
+    gap: 15,
+  },
+  station1: {
     alignItems: "center",
   },
-  logoCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "#1ec28b",
-    justifyContent: "center",
+  station2: {
     alignItems: "center",
-    marginRight: 8,
   },
-  logoText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
+  stationDisplay: {
+    width: 20,
+    height: 12,
+    backgroundColor: "#2F4F4F",
+    borderRadius: 2,
+    marginBottom: 4,
   },
-  appName: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
+  stationBody: {
+    width: 16,
+    height: 35,
+    backgroundColor: "#2F4F4F",
+    borderRadius: 8,
   },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 40,
+  carContainer: {
+    position: "absolute",
+    right: 30,
+    bottom: 20,
   },
-  titleContainer: {
+  carBody: {
+    width: 90,
+    height: 45,
+    backgroundColor: "#DAA520",
+    borderRadius: 22,
+    position: "relative",
+    marginBottom: 8,
+  },
+  carWindow: {
+    position: "absolute",
+    top: 8,
+    left: 20,
+    width: 50,
+    height: 15,
+    backgroundColor: "#4A6741",
+    borderRadius: 8,
+  },
+  carDoor: {
+    position: "absolute",
+    top: 25,
+    right: 25,
+    width: 20,
+    height: 2,
+    backgroundColor: "#B8860B",
+  },
+  carWheelContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+  },
+  carWheel: {
+    width: 12,
+    height: 12,
+    backgroundColor: "#2F4F4F",
+    borderRadius: 6,
+  },
+  chargingCable: {
+    position: "absolute",
+    left: 75,
+    bottom: 35,
+    width: 40,
+    height: 3,
+    backgroundColor: "#2F4F4F",
+    borderRadius: 2,
+  },
+  textContainer: {
     alignItems: "center",
     marginBottom: 40,
   },
-  titleLine: {
+  title: {
     fontSize: 28,
-    fontWeight: "600",
-    color: "#fff",
-    textAlign: "center",
-    lineHeight: 36,
-  },
-  highlightedText: {
-    fontSize: 28,
-    fontWeight: "600",
-    color: "#87CEEB",
-    textAlign: "center",
-    lineHeight: 36,
-  },
-  imageContainer: {
-    width: width * 0.8,
-    height: height * 0.3,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  carImage: {
-    width: "100%",
-    height: "100%",
-  },
-  bottomSection: {
-    paddingHorizontal: 40,
-    paddingBottom: 40,
-    alignItems: "center",
-  },
-  getStartedButton: {
-    backgroundColor: "#1ec28b",
-    paddingVertical: 16,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    marginBottom: 20,
-    minWidth: 200,
-    alignItems: "center",
-  },
-  getStartedButtonText: {
-    color: "#fff",
-    fontSize: 18,
     fontWeight: "bold",
+    color: "#2F4F4F",
+    textAlign: "center",
+    marginBottom: 16,
   },
-  navigationIndicators: {
-    flexDirection: "row",
+  description: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    lineHeight: 22,
+    paddingHorizontal: 20,
+  },
+  buttonContainer: {
+    gap: 16,
+    marginBottom: 30,
+  },
+  signUpButton: {
+    backgroundColor: Colors.green.primary,
+    paddingVertical: 16,
+    borderRadius: 8,
     alignItems: "center",
   },
-  indicatorActive: {
-    width: 20,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#1ec28b",
-    marginHorizontal: 4,
+  signUpButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
-  indicator: {
-    width: 20,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
-    marginHorizontal: 4,
+  logInButton: {
+    backgroundColor: "transparent",
+    paddingVertical: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: Colors.green.primary,
+  },
+  logInButtonText: {
+    color: Colors.green.primary,
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  legalContainer: {
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  legalText: {
+    fontSize: 12,
+    color: "#666",
+    textAlign: "center",
+    lineHeight: 18,
+  },
+  legalLink: {
+    color: Colors.green.primary,
+    textDecorationLine: "underline",
   },
 });

@@ -264,6 +264,7 @@ const styles = StyleSheet.create({
   },
   quickActionsSection: {
     marginBottom: 30,
+    marginTop: 20,
   },
   sectionTitle: {
     fontSize: 22,
