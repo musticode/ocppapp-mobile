@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axiosService from "@/service/axiosService";
 import {
   View,
   Text,
@@ -16,12 +17,15 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { BatteryStatusCard } from "@/components/BatteryStatusCard";
 import { VehicleInfoCard } from "@/components/VehicleInfoCard";
 import { router } from "expo-router";
+import { useSelector } from "react-redux";
+import { selectUserId } from "@/store/reducers/userSlice";
 
 const { width } = Dimensions.get("window");
 
 export default function Vehicle() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme] ?? Colors.light;
+  const localUserId = useSelector(selectUserId);
 
   const [vehicleData, setVehicleData] = useState({
     make: "Tesla",
@@ -53,6 +57,24 @@ export default function Vehicle() {
     },
     avatar: require("@/assets/images/react-logo.png"), // Replace with car image
   });
+
+  const fetchVehicleData = async () => {
+    try {
+      const response = await axiosService.get("/vehicle/fetchVehicleData", {
+        params: {
+          userId: localUserId ? localUserId : null,
+        },
+      });
+      console.log(response.data);
+      setVehicleData(response.data);
+    } catch (error) {
+      console.error("Error fetching vehicle data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchVehicleData();
+  }, []);
 
   const formatCurrency = (amount) => {
     return `$${amount.toFixed(2)}`;
