@@ -211,8 +211,6 @@ export default function PaymentMethodList() {
         onLeftPress={() => router.back()}
       />
 
-      {/* Header with Balance */}
-
       {/* Main Credit Card Display */}
       {activeCard
         ? renderCard(paymentMethods.find((card) => card.id === activeCard)!)
